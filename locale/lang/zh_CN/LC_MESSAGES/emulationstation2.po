@@ -408,6 +408,8 @@ msgid ""
 "Shows icons in the bottom right corner when eligible achievements can be "
 "earned."
 msgstr ""
+"在右下角显示图标当符合条件的成就可"
+"达成时。"
 
 msgid "RETROACHIEVEMENT UNLOCK SOUND"
 msgstr "复古成就解锁音效"
@@ -585,7 +587,7 @@ msgstr "请稍后"
 
 #, c-format
 msgid "%d%% (%d of %d)"
-msgstr "%d%% (%d of %d)"
+msgstr "%d%% (%d 在 %d)"
 
 msgid "Points"
 msgstr "积分"
@@ -723,7 +725,7 @@ msgid "EDIT THIS GAME'S METADATA"
 msgstr "编辑此游戏的元数据"
 
 msgid "VIEW PAD TO KEYBOARD INFORMATION"
-msgstr "查看键盘映射键盘信息"
+msgstr "查看手柄映射键盘信息"
 
 msgid "RESET FILTERS"
 msgstr "重置筛选"
@@ -1109,7 +1111,7 @@ msgid "PLAYER PASSWORD"
 msgstr "玩家密码"
 
 msgid "VIEWER PASSWORD"
-msgstr "查看者密码"
+msgstr "观看者密码"
 
 msgid "DELETE ITEM"
 msgstr "删除项目"
@@ -1225,7 +1227,7 @@ msgid "LOGO SOURCE"
 msgstr "LOGO数据"
 
 msgid "WHEEL"
-msgstr "旋转"
+msgstr "滚动"
 
 msgid "MARQUEE"
 msgstr "蒙版"
@@ -1258,13 +1260,13 @@ msgid "MANUAL"
 msgstr "手册"
 
 msgid "PADTOKEY SETTINGS"
-msgstr ""
+msgstr "手柄映射键盘设置"
 
 msgid "SCRAPER"
-msgstr "抓取元数据"
+msgstr "刮削器"
 
 msgid "SCRAPING DATABASE"
-msgstr "PADTOKEY 设置"
+msgstr "刮削数据库"
 
 msgid "SOURCE"
 msgstr "来源"
@@ -1294,16 +1296,16 @@ msgid "LAST DAY"
 msgstr "昨天"
 
 msgid "LAST WEEK"
-msgstr "前一周"
+msgstr "上周"
 
 msgid "LAST 15 DAYS"
-msgstr "前15天"
+msgstr "前 15 天"
 
 msgid "LAST MONTH"
-msgstr "上个月"
+msgstr "上月"
 
 msgid "LAST 3 MONTHS"
-msgstr "前3个月"
+msgstr "前 3 个月"
 
 msgid "LAST YEAR"
 msgstr "去年"
@@ -1312,7 +1314,7 @@ msgid "SYSTEMS INCLUDED"
 msgstr "包括的系统"
 
 msgid "SCRAPE NOW"
-msgstr "开始抓取"
+msgstr "开始刮削"
 
 msgid "START"
 msgstr "开始"
@@ -1351,7 +1353,7 @@ msgid "VIDEO DRIVER"
 msgstr "视频驱动程序"
 
 msgid "THE BEZEL PROJECT"
-msgstr "框架项目"
+msgstr "装饰框项目"
 
 msgid "SELECT BEZELS TO INSTALL/REMOVE"
 msgstr "选择要安装/移除的遮罩"
@@ -1636,7 +1638,7 @@ msgid "HIDE EMULATIONSTATION WHEN RUNNING A GAME"
 msgstr "运行游戏时隐藏 EMULATIONSTATION"
 
 msgid "COMPLETE QUIT MENU"
-msgstr "完成并推出"
+msgstr "完成退出菜单"
 
 msgid "RETROARCH MENU DRIVER"
 msgstr "RETROARCH 菜单驱动程序"
@@ -1751,7 +1753,7 @@ msgid "INSTANT"
 msgstr "实时"
 
 msgid "Reduces power consumption when idle (useful for handhelds)."
-msgstr "减少空闲时的功耗（对手持设备有用）。"
+msgstr "减少空闲时的功耗（对掌机有用）。"
 
 msgid "SCREEN READER (TEXT TO SPEECH)"
 msgstr "屏幕阅读器（文字转语音）"
@@ -1919,7 +1921,7 @@ msgid "High numbers can result in visible jitter."
 msgstr "高的数字会导致可见的抖动。"
 
 msgid "USE SECOND INSTANCE FOR RUN-AHEAD"
-msgstr "使用第二个实例进行 RUN-AHEAD"
+msgstr "使用第二个实例运行 RUN-AHEAD"
 
 msgid "Can prevent audio skips on button presses."
 msgstr "可以防止在按钮按下时跳过音频。"
@@ -1960,7 +1962,7 @@ msgid "GAME ASPECT RATIO"
 msgstr "游戏长宽比"
 
 msgid "Force the game to render in this aspect ratio."
-msgstr "强制游戏以这个纵横比渲染。"
+msgstr "强制游戏以这个长宽比渲染。"
 
 msgid "VIDEO MODE"
 msgstr "视频模式"
@@ -2278,7 +2280,7 @@ msgid "ICON AND TEXT"
 msgstr "图标和文本"
 
 msgid "IGNORE LEADING ARTICLES WHEN SORTING"
-msgstr "排序时忽略社论"
+msgstr "排序时忽略社评"
 
 msgid "Ignore 'The' and 'A' if at the start."
 msgstr "忽略 'The' 和 'A' 如果在开头。"
@@ -2392,13 +2394,13 @@ msgid "FAST SHUTDOWN SYSTEM"
 msgstr "快速关机"
 
 msgid "Shutdown without saving metadata."
-msgstr "关闭而不保存元数据。"
+msgstr "关闭且不保存元数据。"
 
 msgid "REALLY SHUTDOWN WITHOUT SAVING METADATA?"
 msgstr "是否不保存元数据并直接关机?"
 
 msgid "QUIT EMULATIONSTATION"
-msgstr "退出EmulationStation"
+msgstr "退出 EmulationStation"
 
 msgid "REALLY QUIT?"
 msgstr "确定退出?"
@@ -2501,19 +2503,19 @@ msgid "ERROR: EVERY SYSTEM IS HIDDEN, RE-DISPLAYING ALL OF THEM NOW"
 msgstr "错误：每个系统都被隐藏，现在重新显示"
 
 msgid "QUICK SEARCH"
-msgstr "迅速搜"
+msgstr "快速搜索"
 
 msgid "GO TO LETTER"
-msgstr "发信"
+msgstr "按字母"
 
 msgid "GO TO MANUFACTURER"
-msgstr "访问制造商"
+msgstr "按制造商"
 
 msgid "GO TO HARDWARE"
-msgstr ""
+msgstr "按硬件"
 
 msgid "GO TO DECADE"
-msgstr ""
+msgstr "按年代"
 
 msgid "CONFIGURATION"
 msgstr "配置"
@@ -2573,7 +2575,7 @@ msgid "MENU"
 msgstr "菜单"
 
 msgid "Full"
-msgstr "已满"
+msgstr "全部"
 
 msgid "Kiosk"
 msgstr "大厅"
@@ -3555,7 +3557,7 @@ msgid "REALLY REBOOT FROM NAND?"
 msgstr "确定重启到 NAND 吗？"
 
 msgid "REBOOT FROM NAND"
-msgstr "重启到 NAND"
+msgstr "重启到 NAND（看电视）"
 
 #~ msgid ""
 #~ "THE \"RANDOM VIDEO\" SCREENSAVER SHOWS VIDEOS FROM YOUR GAMELIST.\n"
