@@ -1147,10 +1147,10 @@ msgid "SCRAPE"
 msgstr "抓取元数据"
 
 msgid "EDIT PADTOKEY PROFILE"
-msgstr "编辑 PADTOKEY 配置文件"
+msgstr "编辑手柄映射键位配置文件"
 
 msgid "CREATE PADTOKEY PROFILE"
-msgstr "创建 PADTOKEY 配置文件"
+msgstr "创建手柄映射键位配置文件"
 
 msgid "THEMES DOWNLOADER"
 msgstr "主题下载"
@@ -1260,7 +1260,7 @@ msgid "MANUAL"
 msgstr "手册"
 
 msgid "PADTOKEY SETTINGS"
-msgstr "手柄映射键盘设置"
+msgstr "手柄映射键位设置"
 
 msgid "SCRAPER"
 msgstr "刮削器"
@@ -3059,7 +3059,7 @@ msgstr "屏幕阅读器已停用"
 #~ msgstr "抓取手册"
 
 #~ msgid "SCRAPE PADTOKEY SETTINGS"
-#~ msgstr "抓取pad按键设置"
+#~ msgstr "抓取手柄映射键位设置"
 
 #~ msgid "UI SETTINGS"
 #~ msgstr "UI 设置"
@@ -3554,10 +3554,10 @@ msgid "START RETROARCH"
 msgstr "重启 RetroArch"
 
 msgid "REALLY REBOOT FROM NAND?"
-msgstr "确定重启到 NAND 吗？"
+msgstr "确定从 NAND 重启吗？"
 
 msgid "REBOOT FROM NAND"
-msgstr "重启到 NAND（看电视）"
+msgstr "从 NAND 重启（看电视）"
 
 #~ msgid ""
 #~ "THE \"RANDOM VIDEO\" SCREENSAVER SHOWS VIDEOS FROM YOUR GAMELIST.\n"
