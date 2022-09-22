@@ -251,7 +251,7 @@ msgid "Cheevos Game ID"
 msgstr "Cheevos 游戏 ID"
 
 msgid "Screenscraper Game ID"
-msgstr ""
+msgstr "Screenscraper 游戏 ID"
 
 msgid "all games"
 msgstr "全部游戏"
