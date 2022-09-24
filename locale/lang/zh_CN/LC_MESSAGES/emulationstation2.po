@@ -1178,9 +1178,6 @@ msgstr "选择要安装/删除的主题"
 msgid "CURRENT THEME"
 msgstr "当前主题"
 
-msgid "Points"
-msgstr "积分"
-
 msgid "Unlocked on"
 msgstr "解锁于"
 
