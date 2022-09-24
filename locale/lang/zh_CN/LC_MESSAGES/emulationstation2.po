@@ -116,10 +116,10 @@ msgid "enter path to box background"
 msgstr "输入盒子背面路径"
 
 msgid "Wheel"
-msgstr "滚轮"
+msgstr "方向盘"
 
 msgid "enter path to wheel"
-msgstr "输入商标路径"
+msgstr "输入方向盘路径"
 
 msgid "Mix"
 msgstr "混合图"
@@ -278,7 +278,7 @@ msgid "arcade"
 msgstr "街机"
 
 msgid "vertical arcade"
-msgstr "竖版街机"
+msgstr "纵版街机"
 
 msgid "lightgun games"
 msgstr "光枪游戏"
@@ -753,13 +753,13 @@ msgid "FAILED"
 msgstr "失败"
 
 msgid "UNKNOWN ROM VERSION"
-msgstr "未知ROM版本"
+msgstr "未知 ROM 版本"
 
 msgid "DIFFERENT ROM"
-msgstr "不同的ROM"
+msgstr "不同的 ROM"
 
 msgid "SAME ROM"
-msgstr "相同的ROM"
+msgstr "相同的 ROM"
 
 msgid "UNAVAILABLE CORE"
 msgstr "核心无效"
@@ -1240,10 +1240,10 @@ msgid "BOX SOURCE"
 msgstr "封面数据"
 
 msgid "LOGO SOURCE"
-msgstr "LOGO 数据"
+msgstr "商标数据"
 
 msgid "WHEEL"
-msgstr "滚动"
+msgstr "方向盘"
 
 msgid "MARQUEE"
 msgstr "蒙版"
@@ -1252,7 +1252,7 @@ msgid "SCRAPE FOR"
 msgstr "刮削为"
 
 msgid "SHORT NAME"
-msgstr "短名称"
+msgstr "简称"
 
 msgid "COMMUNITY RATING"
 msgstr "社区评分"
