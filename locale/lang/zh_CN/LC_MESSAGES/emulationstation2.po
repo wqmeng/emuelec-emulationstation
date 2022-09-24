@@ -316,7 +316,7 @@ msgstr "多开发商"
 msgid "This collection contains %i game:%s"
 msgid_plural "This collection contains %i games, including:%s"
 msgstr[0] "这个合辑包含 %i 游戏：%s"
-msgstr[1] ""
+msgstr[1] "这个合辑包含 %i 游戏：%s"
 
 msgid "SCANNING BLUETOOTH"
 msgstr "正在扫描蓝牙设备"
