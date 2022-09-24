@@ -215,13 +215,13 @@ msgid "Crc32"
 msgstr "CRC32"
 
 msgid "Crc32 checksum"
-msgstr "Crc32校验"
+msgstr "Crc32 校验"
 
 msgid "Md5"
 msgstr "Md5"
 
 msgid "Md5 checksum"
-msgstr "Md5校验"
+msgstr "Md5 校验"
 
 msgid "Game time"
 msgstr "游戏时间"
@@ -242,10 +242,10 @@ msgid "this game's region"
 msgstr "这个游戏的区域"
 
 msgid "Cheevos Hash"
-msgstr "Cheevos哈希"
+msgstr "Cheevos 哈希"
 
 msgid "Cheevos checksum"
-msgstr "Cheevos校验和"
+msgstr "Cheevos 校验和"
 
 msgid "Cheevos Game ID"
 msgstr "Cheevos 游戏 ID"
@@ -783,10 +783,10 @@ msgid "INPUT MANUALLY"
 msgstr "手动输入"
 
 msgid "NO WI-FI NETWORKS FOUND"
-msgstr "未发现可用的WIFI网络"
+msgstr "未发现可用的 WI-FI 网络"
 
 msgid "SEARCHING WI-FI NETWORKS"
-msgstr "正在查询WIFI网络"
+msgstr "正在查询 WI-FI 网络"
 
 msgid "YOU ARE NOT CONNECTED TO A NETWORK"
 msgstr "你没联网"
@@ -1064,13 +1064,13 @@ msgid "GAME MEDIA"
 msgstr "游戏媒体"
 
 msgid "VIEW GAME MANUAL"
-msgstr "阅读游戏手册"
+msgstr "查看游戏手册"
 
 msgid "VIEW GAME MAGAZINE"
 msgstr "查看游戏杂志"
 
 msgid "VIEW GAME MAP"
-msgstr "阅读游戏地图"
+msgstr "查看游戏键位映射"
 
 msgid "VIEW FULLSCREEN VIDEO"
 msgstr "查看全屏视频"
@@ -1179,7 +1179,7 @@ msgid "CURRENT THEME"
 msgstr "当前主题"
 
 msgid "Points"
-msgstr ""
+msgstr "积分"
 
 msgid "Unlocked on"
 msgstr "解锁于"
@@ -1243,7 +1243,7 @@ msgid "BOX SOURCE"
 msgstr "封面数据"
 
 msgid "LOGO SOURCE"
-msgstr "LOGO数据"
+msgstr "LOGO 数据"
 
 msgid "WHEEL"
 msgstr "滚动"
@@ -1258,7 +1258,7 @@ msgid "SHORT NAME"
 msgstr "短名称"
 
 msgid "COMMUNITY RATING"
-msgstr "社区评级"
+msgstr "社区评分"
 
 msgid "VIDEO"
 msgstr "视频"
@@ -1348,7 +1348,7 @@ msgstr ""
 "仍要继续？"
 
 msgid "SCRAPING IS RUNNING. DO YOU WANT TO STOP IT?"
-msgstr "抓取进行中"
+msgstr "刮削进行中。您想停止吗？"
 
 msgid "NO GAMES FIT THAT CRITERIA."
 msgstr "没有匹配的游戏。"
@@ -1417,7 +1417,7 @@ msgid "Cpu number"
 msgstr "CPU 序列号"
 
 msgid "Cpu max frequency"
-msgstr "CPU最大频率"
+msgstr "CPU 最大频率"
 
 msgid "Cpu feature"
 msgstr "CPU 特征"
@@ -1521,7 +1521,7 @@ msgid "ARE YOU SURE YOU WANT TO CONFIGURE THE INPUT?"
 msgstr "您确定要配置输入控制器吗？"
 
 msgid "CHOOSE"
-msgstr "选择"
+msgstr "挑选"
 
 msgid "THE USER INTERFACE MODE IS NOW UNLOCKED"
 msgstr "用户界面模式现已解锁"
@@ -1603,7 +1603,7 @@ msgid "RESET FILE EXTENSIONS"
 msgstr "重置文件扩展"
 
 msgid "REDETECT ALL GAMES' LANG/REGION"
-msgstr "重新查询游戏的 语言/区域"
+msgstr "重新查询游戏的语言/区域"
 
 msgid "FIND ALL GAMES WITH NETPLAY/ACHIEVEMENTS"
 msgstr "查找所有具有联网/成就的游戏"
@@ -1629,7 +1629,7 @@ msgid "PARSE GAMELISTS ONLY"
 msgstr "仅解析游戏列表"
 
 msgid "Debug tool: Don't check if the ROMs actually exist. Can cause problems!"
-msgstr "调试工具：不要选取如果游戏 ROM 已经存在。 可能会引起问题！"
+msgstr "调试工具：不要选取如果游戏 ROM 已经存在。可能会引起问题！"
 
 msgid "SEARCH FOR LOCAL ART"
 msgstr "在磁盘上查找图形"
@@ -1712,10 +1712,10 @@ msgid "ASYNC IMAGE LOADING"
 msgstr "异步图像载入中"
 
 msgid "OPTIMIZE IMAGES VRAM USE"
-msgstr "优化图像VRAM使用"
+msgstr "优化图像 VRAM 使用"
 
 msgid "OPTIMIZE VIDEO VRAM USAGE"
-msgstr "优化视频VRAM的使用"
+msgstr "优化视频 VRAM 的使用"
 
 msgid "DOWNLOADS"
 msgstr "资料下载"
@@ -1751,6 +1751,9 @@ msgid "SELECT YOUR TIME ZONE"
 msgstr "选择您的时区"
 
 msgid "TIME ZONE"
+msgstr "时区"
+
+msgid "TIMEZONE"
 msgstr "时区"
 
 msgid "SHOW CLOCK IN 12-HOUR FORMAT"
@@ -1802,7 +1805,7 @@ msgid "ENABLE KODI"
 msgstr "启用 KODI"
 
 msgid "LAUNCH KODI AT BOOT"
-msgstr "开机时进入KODI"
+msgstr "开机时进入 KODI"
 
 msgid "HARDWARE"
 msgstr "硬件"
@@ -1853,7 +1856,7 @@ msgid "SPLASH SETTING"
 msgstr "闪屏设置"
 
 msgid "CHECK BIOS FILES BEFORE RUNNING A GAME"
-msgstr "在启动游戏前检查BIOS"
+msgstr "在启动游戏前检查 BIOS"
 
 msgid "MULTIMEDIA KEYS"
 msgstr "多媒体功能键"
@@ -1988,7 +1991,7 @@ msgstr "视频模式"
 
 msgid ""
 "Sets the display's resolution. Does not affect the rendering resolution."
-msgstr "设置显示器的分辨率。 不影响渲染分辨率。"
+msgstr "设置显示器的分辨率。不影响渲染分辨率。"
 
 msgid "SMOOTH GAMES (BILINEAR FILTERING)"
 msgstr "平滑游戏（双线性过滤）"
@@ -2114,7 +2117,7 @@ msgid "SCRAPER IS RUNNING. DO YOU WANT TO STOP IT?"
 msgstr "刮削器正在运行。你想停止它吗？"
 
 msgid "GAME HASHING IS RUNNING. DO YOU WANT TO STOP IT?"
-msgstr "正在效验游戏.你想停止吗?"
+msgstr "正在效验游戏。你想停止吗？"
 
 msgid "REALLY UPDATE GAMELISTS?"
 msgstr "真要更新游戏列表？"
@@ -2299,7 +2302,7 @@ msgid "ICON AND TEXT"
 msgstr "图标和文本"
 
 msgid "IGNORE LEADING ARTICLES WHEN SORTING"
-msgstr "排序时忽略社评"
+msgstr "排序时忽略前置的冠词"
 
 msgid "Ignore 'The' and 'A' if at the start."
 msgstr "忽略开头的 'The' 和 'A'。"
@@ -2347,7 +2350,7 @@ msgid "ENABLE VIDEO PREVIEW AUDIO"
 msgstr "启用视频音频"
 
 msgid "IP ADDRESS"
-msgstr "IP地址"
+msgstr "IP 地址"
 
 msgid "CONNECTED"
 msgstr "已连接"
@@ -2395,7 +2398,7 @@ msgid "RESTART SYSTEM"
 msgstr "重启"
 
 msgid "REALLY RESTART?"
-msgstr "是否重新启动?"
+msgstr "是否重新启动？"
 
 msgid "SUSPEND SYSTEM"
 msgstr "暂停系统"
@@ -2407,7 +2410,7 @@ msgid "SHUTDOWN SYSTEM"
 msgstr "关机"
 
 msgid "REALLY SHUTDOWN?"
-msgstr "是否关机?"
+msgstr "是否关机？"
 
 msgid "FAST SHUTDOWN SYSTEM"
 msgstr "快速关机"
@@ -2416,13 +2419,13 @@ msgid "Shutdown without saving metadata."
 msgstr "关闭且不保存元数据。"
 
 msgid "REALLY SHUTDOWN WITHOUT SAVING METADATA?"
-msgstr "是否不保存元数据并直接关机?"
+msgstr "是否不保存元数据并直接关机？"
 
 msgid "QUIT EMULATIONSTATION"
 msgstr "退出 EmulationStation"
 
 msgid "REALLY QUIT?"
-msgstr "确定退出?"
+msgstr "确定退出？"
 
 msgid "AUTO SAVE/LOAD ON GAME LAUNCH"
 msgstr "自动保存/加载"
@@ -2841,10 +2844,10 @@ msgid "HAS MEDIAS"
 msgstr "有媒体"
 
 msgid "SCRAPING"
-msgstr "抓取"
+msgstr "刮削"
 
 msgid "SCRAPE FAILED"
-msgstr "抓取失败"
+msgstr "刮削失败"
 
 msgid "SCRAPING FINISHED"
 msgstr "刮削完成"
@@ -2865,7 +2868,7 @@ msgid "%s disconnected"
 msgstr "%s 已断开连接"
 
 msgid "SHIFTS FOR UPPER,LOWER, AND SPECIAL"
-msgstr "SHIFT键可切换大小写或特殊字符"
+msgstr "SHIFT 键可切换大小写和特殊字符"
 
 msgid "ALT GR"
 msgstr ""
@@ -3159,19 +3162,19 @@ msgid "%d h"
 msgstr "%d 小时"
 
 #~ msgid "SCRAPE RATINGS"
-#~ msgstr "抓取游戏评分"
+#~ msgstr "刮削游戏评分"
 
 #~ msgid "SCRAPE VIDEOS"
-#~ msgstr "抓取视频"
+#~ msgstr "刮削视频"
 
 #~ msgid "SCRAPE FANART"
-#~ msgstr "抓取同人作品"
+#~ msgstr "刮削同人作品"
 
 #~ msgid "SCRAPE MANUAL"
-#~ msgstr "抓取手册"
+#~ msgstr "刮削手册"
 
 #~ msgid "SCRAPE PADTOKEY SETTINGS"
-#~ msgstr "抓取手柄映射键位设置"
+#~ msgstr "刮削手柄映射键位设置"
 
 #~ msgid "UI SETTINGS"
 #~ msgstr "UI 设置"
@@ -3183,10 +3186,10 @@ msgstr "%d 小时"
 #~ msgstr "开发者选项"
 
 #~ msgid "CREATE A SUPPORT FILE?"
-#~ msgstr "是否创建支持文件?"
+#~ msgstr "是否创建支持文件？"
 
 #~ msgid "ENABLE FILTERS"
-#~ msgstr "启用筛选器"
+#~ msgstr "启用过滤器"
 
 #~ msgid "PARSE GAMESLISTS ONLY"
 #~ msgstr "仅分析游戏列表"
@@ -3276,7 +3279,7 @@ msgstr "%d 小时"
 #~ msgstr "开始聆听"
 
 #~ msgid "PRELOAD UI"
-#~ msgstr "预加载UI"
+#~ msgstr "预加载 UI"
 
 #~ msgid "REMAP A CONTROLLER"
 #~ msgstr "配置控制器"
@@ -3579,7 +3582,7 @@ msgstr "%d 小时"
 #~ msgstr "按 X 键启动 KODI"
 
 #~ msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-#~ msgstr "是否启动 KODI 媒体中心?"
+#~ msgstr "是否启动 KODI 媒体中心？"
 
 #~ msgid "KODI"
 #~ msgstr "KODI"
