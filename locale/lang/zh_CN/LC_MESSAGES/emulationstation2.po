@@ -3,24 +3,27 @@ msgstr ""
 "Project-Id-Version: emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 23:48+0100\n"
-"Language: zh-CN\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid "UPDATE AVAILABLE"
-msgstr "发现可用更新"
+msgstr "有可用更新"
 
 msgid "Name"
-msgstr "游戏名"
+msgstr "名称"
 
 msgid "this game's name"
 msgstr "这个游戏的名字"
 
 msgid "Description"
-msgstr "游戏描述"
+msgstr "描述"
 
 msgid "this game's description"
 msgstr "这个游戏的描述"
@@ -283,6 +286,93 @@ msgstr "纵版街机"
 msgid "lightgun games"
 msgstr "光枪游戏"
 
+msgid "ACTION"
+msgstr "动作"
+
+msgid "ADULT"
+msgstr "成人"
+
+msgid "ADVENTURE"
+msgstr "冒险"
+
+msgid "BEAT'EM UP"
+msgstr "清版动作游戏"
+
+msgid "CASINO"
+msgstr "博彩"
+
+msgid "CASUAL GAME"
+msgstr "休闲游戏"
+
+msgid "HUNTING AND FISHING"
+msgstr "狩猎和捕鱼"
+
+msgid "FIGHT"
+msgstr "格斗"
+
+msgid "COMPILATION"
+msgstr ""
+
+msgid "RACE, DRIVING"
+msgstr "比赛，竞速"
+
+msgid "DEMO"
+msgstr "演示"
+
+msgid "VARIOUS"
+msgstr "杂项"
+
+msgid "PINBALL"
+msgstr "弹珠"
+
+msgid "PALYING CARDS"
+msgstr "纸牌"
+
+msgid "ROLE PALYING GAMES"
+msgstr "RPG 角色扮演"
+
+msgid "BOARD GAME"
+msgstr "棋盘游戏"
+
+msgid "ASIATIC BOARD GAME"
+msgstr "亚洲棋盘游戏"
+
+msgid "EDUCATIONAL"
+msgstr "教育"
+
+msgid "MUSIC AND DANCE"
+msgstr "音乐与舞蹈"
+
+msgid "PLATFORM"
+msgstr "跳台游戏"
+
+msgid "PUZZLE-GAME"
+msgstr "益智游戏"
+
+msgid "QUIZ"
+msgstr "问答"
+
+msgid "REFLECTION"
+msgstr ""
+
+msgid "SHOOT'EM UP"
+msgstr "清版射击游戏"
+
+msgid "SIMULATION"
+msgstr "模拟"
+
+msgid "SPORTS"
+msgstr "运动"
+
+msgid "SPORTS WITH ANIMALS"
+msgstr "撸宠"
+
+msgid "STRATEGY"
+msgstr "策略"
+
+msgid "SHOOTER"
+msgstr "射击"
+
 msgid "collections"
 msgstr "合辑"
 
@@ -315,8 +405,8 @@ msgstr "多开发商"
 #, c-format
 msgid "This collection contains %i game:%s"
 msgid_plural "This collection contains %i games, including:%s"
-msgstr[0] "这个合辑包含 %i 游戏：%s"
-msgstr[1] "这个合辑包含 %i 游戏：%s"
+msgstr[0] "当前合辑包含 %i 个游戏：%s"
+msgstr[1] "当前合辑包含 %i 个游戏，包括：%s"
 
 msgid "SCANNING BLUETOOTH"
 msgstr "正在扫描蓝牙设备"
@@ -411,9 +501,7 @@ msgstr "挑战指标"
 msgid ""
 "Shows icons in the bottom right corner when eligible achievements can be "
 "earned."
-msgstr ""
-"在右下角显示图标当符合条件的成就可"
-"达成时。"
+msgstr "在右下角显示图标当符合条件的成就可达成时。"
 
 msgid "RETROACHIEVEMENT UNLOCK SOUND"
 msgstr "复古成就解锁音效"
@@ -452,7 +540,7 @@ msgid "OK"
 msgstr "确定"
 
 msgid "FILTER GAMELIST BY"
-msgstr "游戏列表筛选方式:"
+msgstr "游戏列表过滤方式"
 
 msgid "EDIT DYNAMIC COLLECTION FILTERS"
 msgstr "编辑合辑"
@@ -642,7 +730,7 @@ msgid "SHOW UNAVAILABLE GAMES"
 msgstr "显示不可用的游戏"
 
 msgid "Show rooms for games not present on this machine."
-msgstr "显示此机器上不存在的游戏ROM。"
+msgstr "显示此机器上不存在 ROM 的游戏。"
 
 msgid "FINISHED"
 msgstr "完成"
@@ -663,7 +751,7 @@ msgid "SELECT RANDOM GAME"
 msgstr "选择随机游戏"
 
 msgid "JUMP TO GAME BEGINNING WITH THE LETTER"
-msgstr "跳转到..."
+msgstr "跳转到某些字母开头的游戏"
 
 msgid "SORT GAMES BY"
 msgstr "游戏排序方式"
@@ -905,7 +993,7 @@ msgid "SCREENSAVER TYPE"
 msgstr "屏保样式"
 
 msgid "STOP MUSIC ON SCREENSAVER"
-msgstr "录屏时停止音乐"
+msgstr "屏保时停止音乐"
 
 msgid "RANDOM VIDEO SCREENSAVER SETTINGS"
 msgstr "屏保-随机视频设置"
@@ -1210,7 +1298,7 @@ msgid "COPY TO FREE SLOT"
 msgstr "复制到空闲档位"
 
 msgid "SCRAPER SETTINGS"
-msgstr "刮削设置"
+msgstr "刮削器设置"
 
 msgid "IMAGE SOURCE"
 msgstr "图片数据"
@@ -1288,7 +1376,7 @@ msgid "SOURCE"
 msgstr "来源"
 
 msgid "SCRAPE FROM"
-msgstr "刮削于"
+msgstr "刮削源"
 
 msgid "FILTERS"
 msgstr "过滤器"
@@ -1340,8 +1428,7 @@ msgid ""
 "MAY BE FOR DIFFERENT SYSTEMS!\n"
 "CONTINUE ANYWAY?"
 msgstr ""
-"警告：您选择的某些系统没有平台设置。结果"
-"可能适用于不同的系统！\n"
+"警告：您选择的某些系统没有平台设置。结果可能适用于不同的系统！\n"
 "仍要继续？"
 
 msgid "SCRAPING IS RUNNING. DO YOU WANT TO STOP IT?"
@@ -1419,21 +1506,22 @@ msgstr "CPU 最大频率"
 msgid "Cpu feature"
 msgstr "CPU 特征"
 
+#, fuzzy
 msgctxt "game_options"
 msgid "SHARP-BILINEAR-SIMPLE"
 msgstr ""
 
 msgctxt "game_options"
 msgid "SCANLINES"
-msgstr ""
+msgstr "扫描线"
 
 msgctxt "game_options"
 msgid "RETRO"
-msgstr ""
+msgstr "复古"
 
 msgctxt "game_options"
 msgid "ENHANCED"
-msgstr ""
+msgstr "增强"
 
 msgctxt "game_options"
 msgid "CURVATURE"
@@ -1447,9 +1535,10 @@ msgctxt "game_options"
 msgid "FLATTEN-GLOW"
 msgstr ""
 
+#, fuzzy
 msgctxt "game_options"
 msgid "RGA SCALING"
-msgstr ""
+msgstr "RGA 缩放"
 
 msgid "VENDOR"
 msgstr "供应商"
@@ -1484,6 +1573,9 @@ msgstr "主菜单"
 msgid "KODI MEDIA CENTER"
 msgstr "KODI 媒体中心"
 
+msgid "EMUELEC SETTINGS"
+msgstr "EMUELEC 设置"
+
 msgid "GAME SETTINGS"
 msgstr "游戏设置"
 
@@ -1503,7 +1595,7 @@ msgid "EMULATOR SETTINGS"
 msgstr "模拟器设置"
 
 msgid "UPDATES & DOWNLOADS"
-msgstr "更新文件和下载文件"
+msgstr "更新和下载"
 
 msgid "SYSTEM SETTINGS"
 msgstr "系统设置"
@@ -1616,8 +1708,7 @@ msgstr "启用游戏过滤"
 
 msgid ""
 "Whether to show or hide game filtering related settings in the view options."
-msgstr ""
-"在视图选项中是否显示或隐藏游戏的过滤相关设置。"
+msgstr "在视图选项中是否显示或隐藏游戏的过滤相关设置。"
 
 msgid "SAVE METADATA ON EXIT"
 msgstr "退出时保存元数据"
@@ -1629,14 +1720,12 @@ msgid "Debug tool: Don't check if the ROMs actually exist. Can cause problems!"
 msgstr "调试工具：不要选取如果游戏 ROM 已经存在。可能会引起问题！"
 
 msgid "SEARCH FOR LOCAL ART"
-msgstr "在磁盘上查找图形"
+msgstr "在本地查找艺术创作"
 
 msgid ""
 "If no image is specified in the gamelist, try to find media with the same "
 "filename to use."
-msgstr ""
-"如果没有游戏列表中指定的镜像，请尝试查找媒体"
-"具有相同游戏名称的来使用。"
+msgstr "如果没有游戏列表中指定的图像，请尝试查找媒体具有相同游戏名称的来使用。"
 
 msgid "USER INTERFACE"
 msgstr "用户界面"
@@ -1671,9 +1760,7 @@ msgstr "使用北按钮访问游戏选项"
 msgid ""
 "Switches to short-press North for Savestates & long-press South button for "
 "Game Options"
-msgstr ""
-"切换到短按北键保存状态和长按南键打开"
-"游戏选项"
+msgstr "切换到短按北键保存状态和长按南键打开游戏选项"
 
 msgid "CONTROL EMULATIONSTATION WITH FIRST JOYSTICK ONLY"
 msgstr "仅使用第一个操纵杆控制 EMULATIONSTATION"
@@ -1689,8 +1776,7 @@ msgstr "在启动时预加载 UI 元素"
 
 msgid ""
 "Reduces lag when entering gamelists from the system menu, increases boot time"
-msgstr ""
-"减少从系统菜单进入游戏列表时的延迟，加快启动时间"
+msgstr "减少从系统菜单进入游戏列表时的延迟，加快启动时间"
 
 msgid "PRELOAD METADATA MEDIA ON BOOT"
 msgstr "在启动时预加载元数据媒体"
@@ -1698,9 +1784,7 @@ msgstr "在启动时预加载元数据媒体"
 msgid ""
 "Reduces lag when scrolling through a fully scraped gamelist, increases boot "
 "time"
-msgstr ""
-"当滚动浏览完全抓取的游戏列表时减少延迟，加快启动"
-"时间"
+msgstr "当滚动浏览完全抓取的游戏列表时减少延迟，加快启动时间"
 
 msgid "THREADED LOADING"
 msgstr "线程载入中"
@@ -1742,7 +1826,7 @@ msgid "LANGUAGE"
 msgstr "语言"
 
 msgid "LANGUAGE (REGION)"
-msgstr "语言（地区）"
+msgstr "语言（区域）"
 
 msgid "SELECT YOUR TIME ZONE"
 msgstr "选择您的时区"
@@ -1954,9 +2038,7 @@ msgstr "自动帧延迟"
 msgid ""
 "Automatically decrease frame delay temporarily to prevent frame drops. Can "
 "introduce stuttering."
-msgstr ""
-"自动地暂时减少帧延迟来防止丢帧。可能"
-"导致重复抽畜。"
+msgstr "自动地暂时减少帧延迟来防止丢帧。可能导致重复抽畜。"
 
 msgid "VARIABLE REFRESH RATE (G-SYNC, FREESYNC)"
 msgstr "可变刷新率（G-SYNC、FREESYNC）"
@@ -1993,6 +2075,9 @@ msgstr "设置显示器的分辨率。不影响渲染分辨率。"
 msgid "SMOOTH GAMES (BILINEAR FILTERING)"
 msgstr "平滑游戏（双线性过滤）"
 
+msgid "ENABLE MAX PERFORMANCE"
+msgstr "启动最大化性能"
+
 msgid "REWIND"
 msgstr "倒带功能"
 
@@ -2001,6 +2086,9 @@ msgstr "如果核心支持，则存储过去的状态以实时倒回。"
 
 msgid "INTEGER SCALING (PIXEL PERFECT)"
 msgstr "整数缩放 (像素完美显示)"
+
+msgid "INTEGER SCALING (OVERSCALE)"
+msgstr "整数缩放（超标）"
 
 msgid "SHADER SET"
 msgstr "着色器设置"
@@ -2129,11 +2217,9 @@ msgid ""
 "BUTTONS/STICKS YOU DO NOT HAVE BY HOLDING ANY KEY. PRESS THE SOUTH BUTTON TO "
 "CONFIRM WHEN DONE."
 msgstr ""
-"您将要映射控制器。映射基于按键的位置"
-"相对于它在 SNES 控制器的等效位置, 而不是按键的标签。如果"
-"您没有热键的特殊键，请使用选择按钮。通过按住任何键来跳过全部"
-"你没有的按键/摇杆。当完成后按南按钮"
-"确认。"
+"您将要映射控制器。映射基于按键的位置相对于它在 SNES 控制器的等效位置, 而不是"
+"按键的标签。如果您没有热键的特殊键，请使用选择按钮。通过按住任何键来跳过全部"
+"你没有的按键/摇杆。当完成后按南按钮确认。"
 
 msgid "PAIR A BLUETOOTH DEVICE"
 msgstr "配对蓝牙设备"
@@ -2242,7 +2328,7 @@ msgid "AFTER NAME"
 msgstr "名称后"
 
 msgid "SHOW REGION FLAG"
-msgstr "显示地区旗帜"
+msgstr "显示区域旗帜"
 
 msgid "SHOW SAVESTATE ICON"
 msgstr "显示保存状态图标"
@@ -2299,7 +2385,7 @@ msgid "ICON AND TEXT"
 msgstr "图标和文本"
 
 msgid "IGNORE LEADING ARTICLES WHEN SORTING"
-msgstr "排序时忽略前置的冠词"
+msgstr "排序时忽略前置冠词"
 
 msgid "Ignore 'The' and 'A' if at the start."
 msgstr "忽略开头的 'The' 和 'A'。"
@@ -2329,10 +2415,10 @@ msgid "SONG TITLE DISPLAY DURATION"
 msgstr "歌曲的秒数"
 
 msgid "ONLY PLAY SYSTEM-SPECIFIC MUSIC FOLDER"
-msgstr "仅播放指定游戏平台中的音乐"
+msgstr "仅播放特定游戏平台中的音乐"
 
 msgid "PLAY SYSTEM-SPECIFIC MUSIC"
-msgstr "播放主题音乐"
+msgstr "播放特定游戏平台音乐"
 
 msgid "LOWER MUSIC WHEN PLAYING VIDEO"
 msgstr "播放视频时降低音乐音量"
@@ -2542,20 +2628,20 @@ msgstr "配置"
 #, c-format
 msgid "%i COLLECTION"
 msgid_plural "%i COLLECTIONS"
-msgstr[0] "%i 合辑"
-msgstr[1] "%i 合辑"
+msgstr[0] "%i 个合辑"
+msgstr[1] "%i 个合辑"
 
 #, c-format
 msgid "%i ITEM"
 msgid_plural "%i ITEMS"
-msgstr[0] "%i 项目"
-msgstr[1] "%i 项目"
+msgstr[0] "%i 个项目"
+msgstr[1] "%i 个项目"
 
 #, c-format
 msgid "%i GAME"
 msgid_plural "%i GAMES"
-msgstr[0] "%i 游戏"
-msgstr[1] "%i 游戏"
+msgstr[0] "%i 个游戏"
+msgstr[1] "%i 个游戏"
 
 msgid "RANDOM"
 msgstr "随机"
@@ -2571,8 +2657,7 @@ msgid ""
 "FORMAT.\n"
 "DO YOU WANT TO LAUNCH IT ANYWAY?"
 msgstr ""
-"警告：当前设置的模拟器/核心不支持此游戏的文件"
-"格式。\n"
+"警告：当前设置的模拟器/核心不支持此游戏的文件格式。\n"
 "你想启动它吗？"
 
 msgid ""
@@ -2580,8 +2665,7 @@ msgid ""
 "CORRECTLY.\n"
 "DO YOU WANT TO LAUNCH IT ANYWAY?"
 msgstr ""
-"警告：系统缺少 BIOS 文件，游戏可能无法运行"
-"正确。\n"
+"警告：系统缺少 BIOS 文件，游戏可能无法运行正确。\n"
 "你想启动它吗？"
 
 msgid "Preloading UI"
@@ -2641,9 +2725,7 @@ msgstr "收藏"
 msgid ""
 "A valid account is required. Please register an account on https://"
 "retroachievements.org"
-msgstr ""
-"需要一个有效的帐户。请注册一个帐户在 https://"
-"retroachievements.org"
+msgstr "需要一个有效的帐户。请注册一个帐户在 https://retroachievements.org"
 
 msgid "Searching"
 msgstr "搜索中"
@@ -2959,8 +3041,8 @@ msgid ""
 "NO HOTKEY BUTTON HAS BEEN ASSIGNED. THIS IS REQUIRED FOR EXITING GAMES WITH "
 "A CONTROLLER. DO YOU WANT TO USE THE SELECT BUTTON AS YOUR HOTKEY?"
 msgstr ""
-"没有指定热键按钮。这是退出游戏所必需的为"
-"一个控制器。您想使用选择按钮作为您的热键吗？"
+"没有指定热键按钮。这是退出游戏所必需的为一个控制器。您想使用选择按钮作为您的"
+"热键吗？"
 
 msgid "SET SELECT AS HOTKEY"
 msgstr "将选择设置为热键"
@@ -2980,9 +3062,6 @@ msgstr "按任意键"
 msgid "ALREADY TAKEN"
 msgstr "按键已占用"
 
-msgid "DANGER ZONE!"
-msgstr "危险设置区域！"
-
 msgid "You are about to set EmuELEC resolution to"
 msgstr "你即将设置 EmuELEC 分辨率为"
 
@@ -2992,11 +3071,20 @@ msgstr "Emulationstation 即将重启"
 msgid "AUDIO DEVICE"
 msgstr "音频设备"
 
+msgid "Changes will need an EmulationStation restart."
+msgstr "更改需要 EmulationStation 重启。"
+
+msgid "ENABLE BLUETOOTH"
+msgstr "启用蓝牙"
+
 msgid "ENABLE SSH"
 msgstr "启用 SSH"
 
 msgid "START AT BOOT"
 msgstr "开机自动启动"
+
+msgid "SHOW RETROARCH FPS"
+msgstr "显示 RETROARCH FPS"
 
 msgid "ENABLE RA BEZELS"
 msgstr "启用 RA 边框"
@@ -3007,13 +3095,122 @@ msgstr "启用 RA 启动画面"
 msgid "ALWAYS SHOW BOOT VIDEO"
 msgstr "总是显示开机视频"
 
+msgid "RANDOMIZE BOOT VIDEO"
+msgstr "随机的开机视频"
+
+msgid "DEFAULT YOUTUBE SEARCH WORD"
+msgstr "默认 YOUTUBE 搜索文字"
+
+msgid "GAMEPAD CONFIG"
+msgstr "游戏手柄配置"
+
+msgid "AUTO CONFIG ADVANCEMAME GAMEPAD"
+msgstr "自动配置 ADVANCEMAME 游戏手柄"
+
+msgid "AUTO CONFIG ADVANCEMAME GAMEPAD CACHE"
+msgstr "自动配置 ADVANCEMAME 游戏手柄缓存"
+
+msgid "AUTO CONFIG FLYCAST GAMEPAD"
+msgstr "自动配置 FLYCAST 游戏手柄"
+
+msgid "AUTO CONFIG FLYCAST GAMEPAD CACHE"
+msgstr "自动配置 FLYCAST 游戏手柄缓存"
+
+msgid "AUTO CONFIG DOLPHIN GAMEPAD"
+msgstr "自动配置 DOLPHIN 游戏手柄"
+
+msgid "AUTO CONFIG DOLPHIN GAMEPAD CACHE"
+msgstr "自动配置 DOLPHIN 游戏手柄缓存"
+
+msgid "AUTO CONFIG MUPEN64PLUS GAMEPAD"
+msgstr "自动配置 MUPEN64PLUS 游戏手柄"
+
+msgid "AUTO CONFIG MUPEN64PLUS GAMEPAD CACHE"
+msgstr "自动配置 MUPEN64PLUS 游戏手柄缓存"
+
+msgid "RETROARCH MENU"
+msgstr "RETROARCH 菜单"
+
+msgid "EXTERNAL MOUNT OPTIONS"
+msgstr "外置挂载选项"
+
+msgid "EXTERNAL DEVICE"
+msgstr "外置设备"
+
+msgid "Select the mounted drive to be used for ROMS."
+msgstr "选择已经挂载的用于 ROMS 的驱动器。"
+
+msgid "RETRY TIMES"
+msgstr "重试次数"
+
+msgid "How many times to retry the mount on boot."
+msgstr "启动时重复尝试挂载的次数。"
+
+msgid "DELAY BETWEEN TRIES"
+msgstr "重试延迟间隔"
+
+msgid "How much delay in seconds between each retry."
+msgstr "每次重试间等待秒数。"
+
+msgid "FORCE MOUNT NOW"
+msgstr "强制立即挂载"
+
 msgid ""
-"WARNING THIS WILL RESTART EMULATIONSTATION!\n\n"
-"AFTER THE SCRIPT IS DONE REMEMBER TO COPY THE FILE /storage/downloads/ee_backup_config.zip TO SOME PLACE SAFE OR IT WILL BE DELETED ON NEXT REBOOT!\n\n"
+"WARNING THIS WILL RESTART EMULATIONSTATION!\n"
+"\n"
+"System will try to mount the external drive selected \"auto\". Make sure you have all the\n"
+"settings saved before running this.\n"
+"\n"
+"TRY TO MOUNT EXTERNAL AND RESTART?"
+msgstr ""
+"警告这将重新启动 EMULATIONSTATION！\n"
+"\n"
+"系统将重新挂载选择为“自动”的外置驱动器。确保您已将所有的\n"
+"设置在运行它之前保存。\n"
+"\n"
+"尝试挂载外置驱动器并重新启动？"
+
+msgid "DANGER ZONE"
+msgstr "危险区域"
+
+msgid "CLOUD BACKUP SETTINGS AND GAME SAVES"
+msgstr "云备份设置和游戏存档"
+
+msgid "CLOUD RESTORE SETTINGS AND GAME SAVES"
+msgstr "云恢复设置和游戏存档"
+
+msgid "LOCAL BACKUP EMUELEC CONFIGS"
+msgstr "本地备份 EMUELEC 配置"
+
+msgid ""
+"WARNING THIS WILL RESTART EMULATIONSTATION!\n"
+"\n"
+"AFTER THE SCRIPT IS DONE REMEMBER TO COPY THE FILE\n"
+"/storage/roms/backup/ee_backup_config.tar.gz TO SOME PLACE!\n"
+"\n"
 "BACKUP CURRENT CONFIG AND RESTART?"
 msgstr ""
-"警告这将重新启动 EMULATIONSTATION！\n\n"
-"脚本完成后，请记住将文件 /storage/downloads/ee_backup_config.zip 复制到某个安全的地方，否则它将在下次重新启动时被删除！\n\n"
+"警告这将重新启动 EMULATIONSTATION！\n"
+"\n"
+"脚本完成后请记住复制文件\n"
+"/storage/roms/backup/ee_backup_config.tar.gz 到某个地方！\n"
+"\n"
+"备份当前配置并重新启动？"
+
+msgid ""
+"WARNING THIS WILL RESTART EMULATIONSTATION!\n"
+"\n"
+"AFTER THE SCRIPT IS DONE REMEMBER TO COPY THE FILE /storage/downloads/"
+"ee_backup_config.zip TO SOME PLACE SAFE OR IT WILL BE DELETED ON NEXT "
+"REBOOT!\n"
+"\n"
+"BACKUP CURRENT CONFIG AND RESTART?"
+msgstr ""
+"警告这将重新启动 EMULATIONSTATION！\n"
+"\n"
+"脚本完成后，请记住将文件 /storage/downloads/ee_backup_config.zip 复制到某个安"
+"全的地方，否则它将在下次重新启动时被删除！\n"
+"\n"
 "备份当前配置并重新启动？"
 
 msgid "BACKUP EMUELEC CONFIGS"
@@ -3021,27 +3218,56 @@ msgstr "备份 EmuELEC 设置"
 
 msgid ""
 "WARNING: SYSTEM WILL RESET SCRIPTS AND BINARIES !\n"
-"UPDATE, DOWNLOADS, THEMES, BLUETOOTH PAIRINGS AND ROMS FOLDER WILL NOT BE AFFECTED.\n\n"
+"UPDATE, DOWNLOADS, THEMES, BLUETOOTH PAIRINGS AND ROMS FOLDER WILL NOT BE "
+"AFFECTED.\n"
+"\n"
 "RESET SCRIPTS AND BINARIES TO DEFAULT AND RESTART?"
 msgstr ""
 "警告：系统将重置脚本和二进制文件！\n"
-"更新、下载、主题、蓝牙配对和 ROM 文件夹将不受影响。\n\n"
+"更新、下载、主题、蓝牙配对和 ROM 文件夹将不受影响。\n"
+"\n"
 "将脚本和二进制文件重置为默认值并重新启动？"
 
 msgid "RESET EMUELEC SCRIPTS AND BINARIES TO DEFAULT"
-msgstr "重置 EmuELEC 脚本和系统文件到初始状态"
+msgstr "重置 EMUELEC 脚本和系统文件到初始状态"
 
 msgid ""
-"WARNING: ALL CONFIGURATIONS WILL BE RESET AND NO BACKUP WILL BE CREATED!\n\n"
-"IF YOU WANT TO KEEP YOUR SETTINGS MAKE A BACKUP AND SAVE IT ON AN EXTERNAL DRIVE BEFORE RUNING THIS OPTION!\n\n"
+"WARNING: ALL CONFIGURATIONS WILL BE RESET AND NO BACKUP WILL BE CREATED!\n"
+"\n"
+"IF YOU WANT TO KEEP YOUR SETTINGS MAKE A BACKUP AND SAVE IT ON AN EXTERNAL "
+"DRIVE BEFORE RUNING THIS OPTION!\n"
+"\n"
 "RESET SYSTEM TO DEFAULT CONFIG AND RESTART?"
 msgstr ""
-"警告：所有配置都将被重置，并且不会创建任何备份！\n\n"
-"如果您想保留您的设置，请在运行此选项之前进行备份并将其保存在外部驱动器上！\n\n"
+"警告：所有配置都将被重置，并且不会创建任何备份！\n"
+"\n"
+"如果您想保留您的设置，请在运行此选项之前进行备份并将其保存在外部驱动器上！\n"
+"\n"
 "将系统重置为默认配置并重新启动？"
+
+msgid ""
+"WARNING: RETROARCH CONFIG WILL BE RESET TO DEFAULT\n"
+"\n"
+"PER-CORE CONFIGURATIONS WILL NOT BE AFFECTED BUT NO BACKUP WILL BE\n"
+"CREATED!\n"
+"\n"
+"RESET RETROARCH CONFIG TO DEFAULT?"
+msgstr ""
+"警告：RETROARCH 配置将被重置到默认值\n"
+"\n"
+"针对特定核心的配置不会受影响但是并不会有任何备份\n"
+"被创建\n"
+"\n"
+"重置 RETROARCH 配置到默认值？"
+
+msgid "RESET RETROARCH CONFIG TO DEFAULT"
+msgstr "重置 RETROARCH 配置到默认设置"
 
 msgid "RESET SYSTEM TO DEFAULT CONFIG"
 msgstr "重置系统到默认设置"
+
+msgid "FORCE UPDATE"
+msgstr "强制更新"
 
 msgid "You are about to set EmuELEC Language to:"
 msgstr "你即将设置 EmuELEC 语言为："
@@ -3053,7 +3279,6 @@ msgstr "已启用"
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
-msgstr[1] "%d 天前"
 
 msgid "RESTART EMULATIONSTATION"
 msgstr "重启 Emulationstation"
@@ -3094,6 +3319,7 @@ msgstr "欢迎"
 msgid "%i GAMEPAD DETECTED"
 msgid_plural "%i GAMEPADS DETECTED"
 msgstr[0] "检测到 %i 个游戏手柄"
+msgstr[1] "检测到 %i 个游戏手柄"
 
 msgid "NO GAMEPADS DETECTED"
 msgstr "未检测到游戏手柄"
@@ -3126,6 +3352,7 @@ msgstr "全部不选"
 msgid "%i SELECTED"
 msgid_plural "%i SELECTED"
 msgstr[0] "已选中 %i 个"
+msgstr[1] "已选中 %i 个"
 
 msgid "CHANGE"
 msgstr "更改"
@@ -3591,8 +3818,8 @@ msgstr "%d 小时"
 #~ "THE \"RANDOM VIDEO\" SCREENSAVER SHOWS VIDEOS FROM YOUR GAMELIST.\n"
 #~ "IF YOU DON'T HAVE VIDEOS, OR IF NONE OF THEM CAN BE PLAYED AFTER A FEW "
 #~ "ATTEMPTS, IT WILL DEFAULT TO \"BLACK\".\n"
-#~ "MORE OPTIONS IN THE \"UI SETTINGS\" -> \"RANDOM VIDEO SCREENSAVER "
-#~ "SETTINGS\" MENU."
+#~ "MORE OPTIONS IN THE \"UI SETTINGS\" -> \"RANDOM VIDEO SCREENSAVER SETTINGS"
+#~ "\" MENU."
 #~ msgstr ""
 #~ "屏保 \"随机视频\" 将显示游戏列表中的视频。\n"
 #~ "如果游戏列表中没有视频，或在尝试播放失败几次后，显示为\"黑屏\"。\n"
@@ -3985,3 +4212,6 @@ msgstr "%d 小时"
 
 #~ msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 #~ msgstr "更新失败，系统即将重启"
+
+#~ msgid "DANGER ZONE!"
+#~ msgstr "危险设置区域！"
