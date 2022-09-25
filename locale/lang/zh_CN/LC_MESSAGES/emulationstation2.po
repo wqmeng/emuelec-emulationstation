@@ -2959,20 +2959,20 @@ msgid "SPACE"
 msgstr "空格"
 
 msgctxt "joystick"
-msgid "UP"
-msgstr "方向 上"
+msgid "D-PAD UP"
+msgstr "方向键向上"
 
 msgctxt "joystick"
-msgid "DOWN"
-msgstr "方向 下"
+msgid "D-PAD DOWN"
+msgstr "方向键向下"
 
 msgctxt "joystick"
-msgid "LEFT"
-msgstr "方向 左"
+msgid "D-PAD LEFT"
+msgstr "方向键向左"
 
 msgctxt "joystick"
-msgid "RIGHT"
-msgstr "方向 右"
+msgid "D-PAD RIGHT"
+msgstr "方向键向右"
 
 msgctxt "joystick"
 msgid "START"
@@ -2981,6 +2981,46 @@ msgstr "开始"
 msgctxt "joystick"
 msgid "SELECT"
 msgstr "选择"
+
+msgctxt "joystick"
+msgid "BUTTON A / EAST"
+msgstr "按键 A / 东"
+
+msgctxt "joystick"
+msgid "BUTTON B / SOUTH"
+msgstr "按键 B / 东"
+
+msgctxt "joystick"
+msgid "BUTTON X / NORTH"
+msgstr "按键 X / 北"
+
+msgctxt "joystick"
+msgid "BUTTON Y / WEST"
+msgstr "按键 Y / 西"
+
+msgctxt "joystick"
+msgid "LEFT SHOULDER"
+msgstr "左肩"
+
+msgctxt "joystick"
+msgid "RIGHT SHOULDER"
+msgstr "右肩"
+
+msgctxt "joystick"
+msgid "LEFT TRIGGER"
+msgstr "左扳机"
+
+msgctxt "joystick"
+msgid "RIGHT TRIGGER"
+msgstr "右扳机"
+
+msgctxt "joystick"
+msgid "LEFT THUMB"
+msgstr "左摇杆按下"
+
+msgctxt "joystick"
+msgid "RIGHT THUMB"
+msgstr "右摇杆按下"
 
 msgctxt "joystick"
 msgid "LEFT ANALOG UP"
@@ -3015,8 +3055,8 @@ msgid "RIGHT ANALOG RIGHT"
 msgstr "右摇杆 右"
 
 msgctxt "joystick"
-msgid "HOTKEY"
-msgstr "热键"
+msgid "HOTKEY ENABLE"
+msgstr "热键启用"
 
 msgid "CONFIGURING"
 msgstr "配置"
@@ -3144,7 +3184,7 @@ msgid "RETRY TIMES"
 msgstr "重试次数"
 
 msgid "How many times to retry the mount on boot."
-msgstr "启动时重复尝试挂载的次数。"
+msgstr "启动时尝试重复挂载的次数。"
 
 msgid "DELAY BETWEEN TRIES"
 msgstr "重试延迟间隔"
@@ -3224,12 +3264,13 @@ msgid ""
 "RESET SCRIPTS AND BINARIES TO DEFAULT AND RESTART?"
 msgstr ""
 "警告：系统将重置脚本和二进制文件！\n"
+"\n"
 "更新、下载、主题、蓝牙配对和 ROM 文件夹将不受影响。\n"
 "\n"
 "将脚本和二进制文件重置为默认值并重新启动？"
 
 msgid "RESET EMUELEC SCRIPTS AND BINARIES TO DEFAULT"
-msgstr "重置 EMUELEC 脚本和系统文件到初始状态"
+msgstr "重置 EMUELEC 脚本和系统文件到默认设置"
 
 msgid ""
 "WARNING: ALL CONFIGURATIONS WILL BE RESET AND NO BACKUP WILL BE CREATED!\n"
@@ -3256,7 +3297,7 @@ msgstr ""
 "警告：RETROARCH 配置将被重置到默认值\n"
 "\n"
 "针对特定核心的配置不会受影响但是并不会有任何备份\n"
-"被创建\n"
+"被创建！\n"
 "\n"
 "重置 RETROARCH 配置到默认值？"
 
@@ -4215,3 +4256,23 @@ msgstr "%d 小时"
 
 #~ msgid "DANGER ZONE!"
 #~ msgstr "危险设置区域！"
+
+#~ msgctxt "joystick"
+#~ msgid "UP"
+#~ msgstr "方向 上"
+
+#~ msgctxt "joystick"
+#~ msgid "DOWN"
+#~ msgstr "方向 下"
+
+#~ msgctxt "joystick"
+#~ msgid "LEFT"
+#~ msgstr "方向 左"
+
+#~ msgctxt "joystick"
+#~ msgid "RIGHT"
+#~ msgstr "方向 右"
+
+#~ msgctxt "joystick"
+#~ msgid "HOTKEY"
+#~ msgstr "热键"
