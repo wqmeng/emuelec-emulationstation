@@ -2429,11 +2429,10 @@ msgstr "显示歌曲名称"
 msgid "SONG TITLE DISPLAY DURATION"
 msgstr "歌曲的秒数"
 
-msgid "ONLY PLAY SYSTEM-SPECIFIC MUSIC FOLDER"
-msgstr "仅播放特定游戏系统目录中的音乐"
+msgstr "仅播放游戏系统对应目录中的音乐"
 
 msgid "PLAY SYSTEM-SPECIFIC MUSIC"
-msgstr "播放特定游戏系统音乐"
+msgstr "播放游戏系统对应的音乐"
 
 msgid "LOWER MUSIC WHEN PLAYING VIDEO"
 msgstr "播放视频时降低音乐音量"
@@ -3009,7 +3008,7 @@ msgstr "按键 A / 东"
 
 msgctxt "joystick"
 msgid "BUTTON B / SOUTH"
-msgstr "按键 B / 东"
+msgstr "按键 B / 南"
 
 msgctxt "joystick"
 msgid "BUTTON X / NORTH"
@@ -3823,7 +3822,7 @@ msgstr "%d 小时"
 #~ "YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION."
 #~ msgstr ""
 #~ "未找到任何游戏系统\n"
-#~ "请检查系统配置文件中的路径是否正确，并确保游戏目录下的ROM具有正确的扩展"
+#~ "请检查系统配置文件中的路径是否正确，并确保游戏目录下的 ROM 具有正确的扩展"
 #~ "名。"
 
 #~ msgid "%i GAME SUCCESSFULLY SCRAPED!"
