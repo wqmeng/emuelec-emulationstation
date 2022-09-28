@@ -2430,7 +2430,7 @@ msgid "SONG TITLE DISPLAY DURATION"
 msgstr "歌曲的秒数"
 
 msgid "ONLY PLAY SYSTEM-SPECIFIC MUSIC FOLDER"
-msgstr "仅播放特定游戏系统中的音乐"
+msgstr "仅播放特定游戏系统目录中的音乐"
 
 msgid "PLAY SYSTEM-SPECIFIC MUSIC"
 msgstr "播放特定游戏系统音乐"
