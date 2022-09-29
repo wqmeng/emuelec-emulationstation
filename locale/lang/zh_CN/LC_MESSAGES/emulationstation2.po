@@ -89,10 +89,10 @@ msgid "enter path to magazine"
 msgstr "输入杂志路径"
 
 msgid "Map"
-msgstr "键位"
+msgstr "地图"
 
 msgid "enter path to map"
-msgstr "输入键位路径"
+msgstr "输入地图路径"
 
 msgid "Bezel (16:9)"
 msgstr "边框（16:9）"
@@ -101,10 +101,10 @@ msgid "enter path to bezel (16:9)"
 msgstr "输入边框（16:9）路径"
 
 msgid "Cartridge"
-msgstr "存储器"
+msgstr "碟片封面"
 
 msgid "enter path to cartridge"
-msgstr "输入存储器路径"
+msgstr "输入碟片封面路径"
 
 msgid "Alt BoxArt"
 msgstr "包装盒封面"
@@ -119,10 +119,10 @@ msgid "enter path to box background"
 msgstr "输入盒子背面路径"
 
 msgid "Wheel"
-msgstr "方向盘"
+msgstr "标志"
 
 msgid "enter path to wheel"
-msgstr "输入方向盘路径"
+msgstr "输入标志路径"
 
 msgid "Mix"
 msgstr "混合图"
@@ -365,7 +365,7 @@ msgid "SPORTS"
 msgstr "运动"
 
 msgid "SPORTS WITH ANIMALS"
-msgstr "撸宠"
+msgstr "动物运动"
 
 msgid "STRATEGY"
 msgstr "策略"
@@ -400,7 +400,7 @@ msgid "None"
 msgstr "无"
 
 msgid "Various"
-msgstr "多开发商"
+msgstr "多样化"
 
 #, c-format
 msgid "This collection contains %i game:%s"
@@ -1038,7 +1038,7 @@ msgid "SLIDESHOW SCREENSAVER SETTINGS"
 msgstr "屏保-幻灯片设置"
 
 msgid "IMAGE DURATION (SECS)"
-msgstr "图像替换 (SECS)"
+msgstr "图像持续时间（秒）"
 
 msgid "STRETCH IMAGES"
 msgstr "拉伸图像"
@@ -1331,7 +1331,7 @@ msgid "LOGO SOURCE"
 msgstr "商标数据"
 
 msgid "WHEEL"
-msgstr "方向盘"
+msgstr "标志"
 
 msgid "MARQUEE"
 msgstr "蒙版"
