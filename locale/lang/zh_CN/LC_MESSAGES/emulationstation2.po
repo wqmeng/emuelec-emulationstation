@@ -101,10 +101,10 @@ msgid "enter path to bezel (16:9)"
 msgstr "输入边框（16:9）路径"
 
 msgid "Cartridge"
-msgstr "碟片封面"
+msgstr "游戏卡带"
 
 msgid "enter path to cartridge"
-msgstr "输入碟片封面路径"
+msgstr "输入游戏卡带封面路径"
 
 msgid "Alt BoxArt"
 msgstr "包装盒封面"
