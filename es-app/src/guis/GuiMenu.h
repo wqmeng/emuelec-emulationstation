@@ -12,14 +12,17 @@
 
 class StrInputConfig
 {
- public:
-  StrInputConfig(std::string ideviceName, std::string ideviceGUIDString) {
-    deviceName = ideviceName;
-    deviceGUIDString = ideviceGUIDString;
-  }
+public:
+	StrInputConfig(const std::string& ideviceName, const std::string& ideviceGUIDString, const std::string& idevicePath)
+	{
+		deviceName = ideviceName;
+		deviceGUIDString = ideviceGUIDString;
+		devicePath = idevicePath;
+	}
 
-  std::string deviceName;
-  std::string deviceGUIDString;
+	std::string deviceName;
+	std::string deviceGUIDString;
+	std::string devicePath;
 };
 
 struct DecorationSetInfo
@@ -34,6 +37,23 @@ struct DecorationSetInfo
 	std::string path;
 	std::string imageUrl;
 };
+
+#ifdef _ENABLEEMUELEC
+struct sScreenDimensions
+{
+	int width;
+	int height;
+};
+
+struct sScreenBorders
+{
+	float left;
+	float right;
+	float top;
+	float bottom;
+};
+
+#endif
 
 class GuiMenu : public GuiComponent
 {
@@ -69,8 +89,9 @@ private:
     static void openDangerZone(Window* mWindow, std::string configName);
     static void createGamepadConfig(Window* window, GuiSettings* systemConfiguration);
     static void openExternalMounts(Window* mWindow, std::string configName);
+		static void addFrameBufferOptions(Window* mWindow, GuiSettings* guiSettings, std::string configName, std::string header);
 #endif
-	
+
 	void openSystemSettings();
 	void openGamesSettings();
 	void openControllersSettings(int autoSel = 0);
@@ -121,8 +142,8 @@ private:
 	static void addDecorationSetOptionListComponent(Window* window, GuiSettings* parentWindow, const std::vector<DecorationSetInfo>& sets, const std::string& configName = "global");
 	static void createDecorationItemTemplate(Window* window, std::vector<DecorationSetInfo> sets, std::string data, ComponentListRow& row);
 
-	static void addFeatureItem(Window* window, GuiSettings* settings, const CustomFeature& feat, const std::string& configName);
-	static void addFeatures(const VectorEx<CustomFeature>& features, Window* window, GuiSettings* settings, const std::string& configName, const std::string& defaultGroupName = "", bool addDefaultGroupOnlyIfNotFirst = false);
+	static void addFeatureItem(Window* window, GuiSettings* settings, const CustomFeature& feat, const std::string& configName, const std::string& system, const std::string& emulator, const std::string& core);
+	static void addFeatures(const VectorEx<CustomFeature>& features, Window* window, GuiSettings* settings, const std::string& configName, const std::string& system, const std::string& emulator, const std::string& core, const std::string& defaultGroupName = "", bool addDefaultGroupOnlyIfNotFirst = false);
 
 	bool checkNetwork();
 

@@ -28,6 +28,7 @@ namespace PlatformIds
 		COLECOVISION,
 		COMMODORE_64,
 		COMMODORE_VIC20,
+        COMMODORE_PLUS4,
 		INTELLIVISION,
 		MAC_OS,
 		XBOX,
@@ -159,6 +160,7 @@ namespace PlatformIds
 		APF_MP_1000,
 		CAMPUTER_LYNX,
 		EPOCH_GAMEPOCKET,
+		WASM4,
 
 		PLATFORM_IGNORE, // do not allow scraping for this system
 		PLATFORM_COUNT

@@ -182,8 +182,10 @@ void TextToSpeech::setLanguage(const std::string language)
 	if (language_part1 == "es_ES") voice = "spanish";
 	if (language_part1 == "es_MX") voice = "spanish-latin-am";
 	//if(language_part1 == "eu_ES") voice = "";
+	if (language_part1 == "fi_FI") voice = "finnish";
 	if (language_part1 == "fr_FR") voice = "french";
 	if (language_part1 == "hu_HU") voice = "hungarian";
+	if (language_part1 == "id_ID") voice = "";
 	if (language_part1 == "it_IT") voice = "italian";
 	//if(language_part1 == "ja_JP") voice = "";
 	//if(language_part1 == "ko_KR") voice = "";

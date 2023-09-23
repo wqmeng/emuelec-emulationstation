@@ -369,11 +369,21 @@ msgstr "USTAWIENIA"
 msgid "RETROACHIEVEMENTS"
 msgstr "RETROACHIEVEMENTS"
 
+msgid "USERNAME"
+msgstr "NAZWA UŻYTKOWNIKA"
+
+msgid "PASSWORD"
+msgstr "HASŁO"
+
+msgid "OPTIONS"
+msgstr "OPCJE"
+
 msgid "HARDCORE MODE"
 msgstr "TRYB HARDCORE"
 
 msgid "Disable loading states, rewind and cheats for more points."
-msgstr "Wyłącz wczytywanie stanów, przewijanie i cheaty dla większej ilości punktów."
+msgstr ""
+"Wyłącz wczytywanie stanów, przewijanie i cheaty dla większej ilości punktów."
 
 msgid "LEADERBOARDS"
 msgstr "RANKINGI"
@@ -386,7 +396,8 @@ msgid "VERBOSE MODE"
 msgstr "TRYB INFORMACJI PEŁNEJ"
 
 msgid "Show achievement progression on game launch and other notifications."
-msgstr "Pokaż postępy osiągnięć przy uruchomieniu gry i w innych powiadomieniach."
+msgstr ""
+"Pokaż postępy osiągnięć przy uruchomieniu gry i w innych powiadomieniach."
 
 msgid "RICH PRESENCE"
 msgstr "BOGATA PREZENCJA"
@@ -420,12 +431,6 @@ msgstr "brak"
 
 msgid "UNLOCK SOUND"
 msgstr "DŹWIĘK ODBLOKOWANIA"
-
-msgid "USERNAME"
-msgstr "NAZWA UŻYTKOWNIKA"
-
-msgid "PASSWORD"
-msgstr "HASŁO"
 
 msgid "SHOW RETROACHIEVEMENTS ENTRY IN MAIN MENU"
 msgstr "POKAŻ WPIS RETROACHIEVEMENT W MENU GŁÓWNYM"
@@ -506,9 +511,6 @@ msgstr "Nazwa nowej kolekcji"
 msgid "CREATE NEW DYNAMIC COLLECTION"
 msgstr "STWÓRZ NOWĄ KOLEKCJĘ DYNAMICZNĄ"
 
-msgid "OPTIONS"
-msgstr "OPCJE"
-
 msgid "SORT COLLECTIONS AND SYSTEMS"
 msgstr "SORTUJ KOLEKCJE I SYSTEMY"
 
@@ -520,6 +522,9 @@ msgstr "WEDŁUG PRODUCENTA"
 
 msgid "BY HARDWARE TYPE"
 msgstr "WEDŁUG SPRZĘTU"
+
+msgid "BY MANUFACTURER AND TYPE"
+msgstr "WEDŁUG PRODUCENTA I RODZAJU"
 
 msgid "BY RELEASE YEAR"
 msgstr "WEDŁUG ROKU WYDANIA"
@@ -702,6 +707,25 @@ msgstr "ZAMKNIJ"
 msgid "ARE YOU SURE YOU WANT TO DELETE THIS ITEM?"
 msgstr "CZY NA PEWNO CHCESZ USUNĄĆ TEN ELEMENT?"
 
+msgid "FORGET A BLUETOOTH DEVICE"
+msgstr "USUŃ URZĄDZENIE BLUETOOTH"
+
+msgid "REMOVE ALL"
+msgstr "USUŃ WSZYSTKO"
+
+msgid "NO BLUETOOTH DEVICES FOUND"
+msgstr "NIE ZNALEZIONO ŻADNEGO URZĄDZENIA"
+
+msgid "REMOVE"
+msgstr "USUŃ"
+
+msgid "BLUETOOTH DEVICES HAVE BEEN DELETED."
+msgstr "URZĄDZENIA BLUETOOTH ZOSTAŁY USUNIĘTE."
+
+#, c-format
+msgid "ARE YOU SURE YOU WANT TO REMOVE '%s' ?"
+msgstr "CZY NA PEWNO USUNĄĆ '%s'?"
+
 msgid "INPUT"
 msgstr "WEJŚCIE"
 
@@ -762,17 +786,11 @@ msgstr "WYSZUKIWANIE SIECI WIFI"
 msgid "YOU ARE NOT CONNECTED TO A NETWORK"
 msgstr "NIE MASZ POŁĄCZENIA Z SIECIĄ"
 
-msgid "FORGET A BLUETOOTH DEVICE"
-msgstr "USUŃ URZĄDZENIE BLUETOOTH"
+msgid "PAIR A BLUETOOTH DEVICE"
+msgstr "PODŁĄCZ URZĄDZENIE BLUETOOTH"
 
-msgid "REMOVE ALL"
-msgstr "USUŃ WSZYSTKO"
-
-msgid "NO BLUETOOTH DEVICES FOUND"
-msgstr "NIE ZNALEZIONO ŻADNEGO URZĄDZENIA"
-
-msgid "BLUETOOTH DEVICES HAVE BEEN DELETED."
-msgstr "URZĄDZENIA BLUETOOTH ZOSTAŁY USUNIĘTE."
+msgid "PAIR"
+msgstr "PARUJ"
 
 msgid "FILE BROWSER"
 msgstr "PRZEGLĄDARKA PLIKÓW"
@@ -813,9 +831,6 @@ msgstr "ZAKTUALIZUJ"
 #, c-format
 msgid "'%s' ADDED TO DOWNLOAD QUEUE"
 msgstr "'%s' DODANO DO KOLEJKI POBIERANIA"
-
-msgid "REMOVE"
-msgstr "USUŃ"
 
 msgid "UNINSTALLATION ADDED TO QUEUE"
 msgstr "DEINSTALACJA DODANA DO KOLEJKI"
@@ -1010,6 +1025,16 @@ msgstr ""
 "OBECNIE UŻYWASZ WERSJI %s\n"
 "CZY AKTUALIZOWAĆ DO WERSJI %s?"
 
+#, c-format
+msgid ""
+"UNOFFICIAL SYSTEM MODIFICATIONS DETECTED.\n"
+"UPGRADING COULD BREAK YOUR SYSTEM.\n"
+"DO YOU WANT TO UPDATE TO VERSION %s?"
+msgstr ""
+"WYKRYTO NIEOFICJALNE MODYFIKACJE SYSTEMU.\n"
+"AKTUALIZACJA MOŻE ZABURZYĆ TWÓJ SYSTEM.\n"
+"CZY CHCESZ ZAKTUALIZOWAĆ DO WERSJI %s?"
+
 msgid "NETWORK CONNECTION NEEDED"
 msgstr "WYMAGA POŁĄCZENIA Z INTERNETEM"
 
@@ -1145,7 +1170,15 @@ msgstr "POBIERACZ MOTYWÓW"
 msgid "SELECT THEMES TO INSTALL/REMOVE"
 msgstr "WYBIERZ MOTYWY DO INSTALACJI/USUNIĘCIA"
 
-#, c-format
+msgid "All"
+msgstr "Wszystko"
+
+msgid "Installed"
+msgstr "Zainstalowane"
+
+msgid "Available"
+msgstr "Dostępne"
+
 msgid "CURRENT THEME"
 msgstr "AKTUALNY MOTYW"
 
@@ -1657,6 +1690,12 @@ msgstr ""
 msgid "CONTROL EMULATIONSTATION WITH FIRST JOYSTICK ONLY"
 msgstr "STERUJ EMULATIONSTATION TYLKO Z PIERWSZEGO JOYSTICKA"
 
+msgid "GUN MOVE TOLERENCE"
+msgstr "TOLERANCJA RUCHU PISTOLETU"
+
+msgid "ENABLE HID JOYSTICK DRIVERS"
+msgstr "WŁĄCZ STEROWNIKI UKRYTYCH JOYSTICKÓW"
+
 msgid "SHOW NETWORK INDICATOR"
 msgstr "POKAŻ INDYKATOR SIECI"
 
@@ -1971,7 +2010,8 @@ msgstr "TRYB WIDEO"
 
 msgid ""
 "Sets the display's resolution. Does not affect the rendering resolution."
-msgstr "Ustawia rozdzielczość ekranu. Nie wpływa na rozdzielczość renderowania."
+msgstr ""
+"Ustawia rozdzielczość ekranu. Nie wpływa na rozdzielczość renderowania."
 
 msgid "SMOOTH GAMES (BILINEAR FILTERING)"
 msgstr "WYGŁADZANIE GIER (FILTROWANIE DWULINIOWE)"
@@ -2057,7 +2097,9 @@ msgid "AUTO SAVE/LOAD"
 msgstr "AUTOMATYCZNE ZAPISYWANIE/WCZYTYWANIE"
 
 msgid "Load latest savestate on game launch and savestate when exiting game."
-msgstr "Wczytaj najnowszy stan zapisu przy uruchamianiu gry i zapisz stan przy wychodzeniu z gry."
+msgstr ""
+"Wczytaj najnowszy stan zapisu przy uruchamianiu gry i zapisz stan przy "
+"wychodzeniu z gry."
 
 msgid "INCREMENTAL SAVESTATES"
 msgstr "PRZYROSTOWY ZAPIS STANU"
@@ -2120,8 +2162,23 @@ msgstr ""
 "\"SELECT\". POMIŃ WSZYSTKIE PRZYCISKI, KTÓRYCH NIE MASZ PRZYTRZYMUJĄC "
 "DOWOLNY PRZYCISK. NACIŚNIJ DOLNY PRZYCISK GDY SKOŃCZYSZ."
 
-msgid "PAIR A BLUETOOTH DEVICE"
-msgstr "PODŁĄCZ URZĄDZENIE BLUETOOTH"
+msgid "SINDEN GUN SETTINGS"
+msgstr "USTAWIENIA PISTOLETU SINDEN"
+
+msgid "WIIMOTE GUN SETTINGS"
+msgstr "USTAWIENIA PISTOLETU WIIMOTE"
+
+msgid "BLUETOOTH"
+msgstr "BLUETOOTH"
+
+msgid "PAIR BLUETOOTH PADS AUTOMATICALLY"
+msgstr "SPARUJ AUTOMATYCZNIE PADY BLUETOOTH"
+
+msgid "PAIR A BLUETOOTH DEVICE MANUALLY"
+msgstr "SPARUJ RĘCZNIE URZĄDZENIE BLUETOOTH"
+
+msgid "DISPLAY OPTIONS"
+msgstr "OPCJE EKRANU"
 
 msgid "SHOW CONTROLLER ACTIVITY"
 msgstr "POKAŻ DZIAŁANIE KONTROLERA"
@@ -2129,11 +2186,8 @@ msgstr "POKAŻ DZIAŁANIE KONTROLERA"
 msgid "SHOW CONTROLLER BATTERY LEVEL"
 msgstr "POKAŻ POZIOM BATERII KONTROLERA"
 
-msgid "SINDEN GUN SETTINGS"
-msgstr "USTAWIENIA PISTOLETU SINDEN"
-
-msgid "WIIMOTE GUN SETTINGS"
-msgstr "USTAWIENIA PISTOLETU WIIMOTE"
+msgid "PLAYER ASSIGNMENTS"
+msgstr "PRZYPISANIE GRACZY"
 
 #, c-format
 msgid "P%i'S CONTROLLER"
@@ -2153,6 +2207,18 @@ msgstr "ŚREDNIE"
 
 msgid "BIG"
 msgstr "WIELKIE"
+
+msgid "BORDER MODE"
+msgstr "TRYB OBRAMOWANIA"
+
+msgid "NORMAL"
+msgstr "NORMALNE"
+
+msgid "IN GAME ONLY"
+msgstr "TYLKO W GRZE"
+
+msgid "HIDDEN"
+msgstr "UKRYTE"
 
 msgid "RECOIL"
 msgstr "ODRZUT"
@@ -2255,9 +2321,6 @@ msgstr "wideo"
 
 msgid "grid"
 msgstr "siatka"
-
-msgid "DISPLAY OPTIONS"
-msgstr "OPCJE EKRANU"
 
 msgid "LIST TRANSITION"
 msgstr "PRZEJŚCIE LISTY"

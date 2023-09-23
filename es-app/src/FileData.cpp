@@ -153,6 +153,17 @@ std::string FileData::findLocalArt(const std::string& type, std::vector<std::str
 			std::string path = getSystemEnvData()->mStartPath + "/images/" + getDisplayName() + (type.empty() ? "" :  "-" + type) + ext;
 			if (Utils::FileSystem::exists(path))
 				return path;
+
+			if (type == "video")
+			{
+				path = getSystemEnvData()->mStartPath + "/videos/" + getDisplayName() + "-" + type + ext;
+				if (Utils::FileSystem::exists(path))
+					return path;
+
+				path = getSystemEnvData()->mStartPath + "/videos/" + getDisplayName() + ext;
+				if (Utils::FileSystem::exists(path))
+					return path;
+			}
 		}
 	}
 
@@ -224,9 +235,6 @@ const bool FileData::hasCheevos()
 	return false;
 }
 
-static std::set<std::string> _imageExtensions = { ".jpg", ".png", ".jpeg", ".gif" };
-static std::set<std::string> _videoExtensions = { ".mp4", ".avi", ".mkv", ".webm" };
-
 bool FileData::hasAnyMedia()
 {
 	if (Utils::FileSystem::exists(getImagePath()) || Utils::FileSystem::exists(getThumbnailPath()) || Utils::FileSystem::exists(getVideoPath()))
@@ -248,8 +256,7 @@ bool FileData::hasAnyMedia()
 		}
 		else if (mdd.id != MetaDataId::Image && mdd.id != MetaDataId::Thumbnail)
 		{
-			auto ext = Utils::String::toLower(Utils::FileSystem::getExtension(path));
-			if (_imageExtensions.find(ext) == _imageExtensions.cend())
+			if (Utils::FileSystem::isImage(path))
 				continue;
 
 			if (Utils::FileSystem::exists(path))
@@ -276,8 +283,7 @@ std::vector<std::string> FileData::getFileMedias()
 		if (path.empty())
 			continue;
 
-		auto ext = Utils::String::toLower(Utils::FileSystem::getExtension(path));
-		if (_imageExtensions.find(ext) == _imageExtensions.cend())
+		if (!Utils::FileSystem::isImage(path))
 			continue;
 		
 		if (Utils::FileSystem::exists(path))
@@ -339,8 +345,10 @@ const std::string FileData::getVideoPath()
 			return ((FolderData*)this)->mChildren[0]->getVideoPath();
 		else if (getType() == GAME)
 		{
-			auto ext = Utils::String::toLower(Utils::FileSystem::getExtension(getPath()));
-			if (_videoExtensions.find(ext) != _videoExtensions.cend())
+			if (Utils::FileSystem::isVideo(getPath()))
+				return getPath();
+
+			if (Utils::FileSystem::isAudio(getPath()))
 				return getPath();
 		}
 	}
@@ -394,6 +402,9 @@ const std::string FileData::getImagePath()
 				auto ext = Utils::String::toLower(Utils::FileSystem::getExtension(image));
 				if (TextureData::PdfHandler == nullptr && ext == ".pdf" && ResourceManager::getInstance()->fileExists(":/pdf.jpg"))
 					return ":/pdf.jpg";
+
+				if (Utils::FileSystem::isAudio(image) && ResourceManager::getInstance()->fileExists(":/mp3.jpg"))
+					return ":/mp3.jpg";
 			}
 		}
 	}
@@ -1751,6 +1762,15 @@ std::string FileData::getProperty(const std::string& name)
 
 	if (name == "kidGame")
 		return getKidGame() ? _("YES") : _("NO");
+
+	if (name == "gunGame")
+		return isLightGunGame() ? _("YES") : _("NO");
+
+	if (name == "system")
+		return getSourceFileData()->getSystemName();
+
+	if (name == "systemName")
+		return getSourceFileData()->getSystem()->getFullName();
 
 	if (name == "gameTime")
 	{

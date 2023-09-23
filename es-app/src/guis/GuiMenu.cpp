@@ -42,7 +42,8 @@
 #include "guis/GuiBackupStart.h"
 #include "guis/GuiTextEditPopup.h"
 #include "guis/GuiWifi.h"
-#include "guis/GuiBluetooth.h"
+#include "guis/GuiBluetoothPair.h"
+#include "guis/GuiBluetoothForget.h"
 #include "scrapers/ThreadedScraper.h"
 #include "FileSorts.h"
 #include "ThreadedHasher.h"
@@ -106,6 +107,89 @@
 #define controllers_settings_label		gettext_controllers_settings
 #else
 #define controllers_settings_label		gettext_controllers_and_bluetooth_settings
+#endif
+
+
+#ifdef _ENABLEEMUELEC
+
+static std::vector<std::string> explode(std::string sData, char delimeter=',')
+{
+	std::vector<std::string> arr;	
+	std::stringstream ssData(sData);
+	std::string datum;
+	while(std::getline(ssData, datum, delimeter))
+	{
+			arr.push_back(datum);
+	}
+	return arr;
+}
+
+static std::vector<int> int_explode(std::string sData, char delimeter=',')
+{
+	std::vector<int> arr;	
+	std::stringstream ssData(sData);
+	std::string datum;
+	while(std::getline(ssData, datum, delimeter))
+	{
+			arr.push_back( atoi(datum.c_str()));
+	}
+	return arr;
+}
+
+static std::string toupper(std::string s)
+{
+	std::for_each(s.begin(), s.end(), [](char & c){
+	    c = ::toupper(c);
+	});	
+	return s;
+}
+
+int* getVideoModeDimensions(std::string videomode, std::vector<std::string> reslist) 
+{
+	static int screen[2];
+
+	if (videomode == "480cvbs")
+	{
+		screen[0] = 720;
+		screen[1] = 480;
+		return screen;
+  }
+	else if (videomode == "576cvbs")
+	{
+		screen[0] = 720;
+		screen[1] = 576;
+		return screen;
+  }
+	
+	int pos = videomode.find('x');
+	std::string tmp = videomode;
+
+	if (pos >= 0)
+	{
+		screen[0] = atoi(videomode.substr(0, pos).c_str());
+		tmp = videomode.substr(pos+1);
+	}
+		
+	pos = tmp.find('p');
+	if (pos < 0)
+		pos = tmp.find('i');
+	if (pos >= 0)
+	{
+		screen[1] = atoi(tmp.substr(0, pos).c_str());					
+	}
+
+	if (screen[0] == 0) {
+		for (auto it = reslist.cbegin(); it != reslist.cend(); it++) {
+			int pos = (*it).find(" "+std::to_string(screen[1]));
+			if (pos >= 0) {
+				screen[0] = atoi((*it).substr(0,pos).c_str());
+				break;
+			}
+		}
+	}
+	return screen;
+}
+
 #endif
 
 GuiMenu::GuiMenu(Window *window, bool animate) : GuiComponent(window), mMenu(window, _("MAIN MENU").c_str()), mVersion(window)
@@ -626,6 +710,30 @@ void GuiMenu::createGamepadConfig(Window* window, GuiSettings* systemConfigurati
 		SystemConf::getInstance()->saveSystemConf();
 	});
 
+	// yabasanshiro Gamepad
+	auto enable_yabasanshirogp = std::make_shared<SwitchComponent>(window);
+	bool yabasanshirogpEnabled = SystemConf::getInstance()->get("yabasanshiro_auto_gamepad") == "1";
+	enable_yabasanshirogp->setState(yabasanshirogpEnabled);
+	gamepadConfiguration->addWithLabel(_("AUTO CONFIG YABASANSHIRO GAMEPAD"), enable_yabasanshirogp);
+
+	gamepadConfiguration->addSaveFunc([enable_yabasanshirogp, window] {
+		bool yabasanshirogpenabled = enable_yabasanshirogp->getState();
+		SystemConf::getInstance()->set("yabasanshiro_auto_gamepad", yabasanshirogpenabled ? "1" : "0");
+		SystemConf::getInstance()->saveSystemConf();
+	});
+
+	// ppssppsdl Gamepad
+	auto enable_ppssppsdlgp = std::make_shared<SwitchComponent>(window);
+	bool ppssppsdlgpEnabled = SystemConf::getInstance()->get("ppssppsdl_auto_gamepad") == "1";
+	enable_ppssppsdlgp->setState(ppssppsdlgpEnabled);
+	gamepadConfiguration->addWithLabel(_("AUTO CONFIG PPSSPPSDL GAMEPAD"), enable_ppssppsdlgp);
+
+	gamepadConfiguration->addSaveFunc([enable_ppssppsdlgp, window] {
+		bool ppssppsdlgpenabled = enable_ppssppsdlgp->getState();
+		SystemConf::getInstance()->set("ppssppsdl_auto_gamepad", ppssppsdlgpenabled ? "1" : "0");
+		SystemConf::getInstance()->saveSystemConf();
+	});
+
 	window->pushGui(gamepadConfiguration);
 }
 
@@ -704,6 +812,173 @@ void GuiMenu::openExternalMounts(Window* mWindow, std::string configName)
 mWindow->pushGui(externalMounts);
 }
 
+#ifdef _ENABLEEMUELEC
+void GuiMenu::addFrameBufferOptions(Window* mWindow, GuiSettings* guiSettings, std::string configName, std::string header)
+{
+	std::string ee_videomode = SystemConf::getInstance()->get("ee_videomode");
+	if (ee_videomode.empty() || ee_videomode == "auto")
+		ee_videomode = getShOutput(R"(cat /sys/class/display/mode)");
+
+	if (Utils::FileSystem::exists("/storage/.config/EE_VIDEO_MODE"))
+		ee_videomode = getShOutput(R"(cat /storage/.config/EE_VIDEO_MODE)");
+
+	if (configName != "ee_es" && configName != "ee_emu") 
+		ee_videomode = SystemConf::getInstance()->get(configName+".nativevideo");
+
+	std::string ee_framebuffer = SystemConf::getInstance()->get(configName+".framebuffer."+ee_videomode);
+	if (ee_framebuffer.empty()) {
+		ee_framebuffer = "auto";
+	}
+
+	std::vector<std::string> reslist;
+		reslist.push_back("3840 2160");
+		reslist.push_back("2560 1440");
+		reslist.push_back("1920 1080");
+		reslist.push_back("1280 720");
+		reslist.push_back("720 480");
+		reslist.push_back("768 576");
+		reslist.push_back("1680 1050");
+		reslist.push_back("1440 900");
+		reslist.push_back("1280 1024");
+		reslist.push_back("1280 960");
+		reslist.push_back("1280 800");
+		reslist.push_back("1024 768");
+		reslist.push_back("800 600");
+		reslist.push_back("640 480");
+
+	int* ee_dimensions = getVideoModeDimensions(ee_videomode, reslist);
+
+	static sScreenDimensions ee_screen;
+	ee_screen.width = ee_dimensions[0];
+	ee_screen.height = ee_dimensions[1];
+
+	auto emuelec_frame_buffer = std::make_shared< OptionListComponent<std::string> >(mWindow, "VIDEO MODE", false);
+
+	emuelec_frame_buffer->add("auto", "auto", ee_framebuffer == "auto");
+
+	for (auto it = reslist.cbegin(); it != reslist.cend(); it++) {
+		std::string lbl = *it;
+		lbl = lbl.replace(lbl.find(" "),1,"x");
+		emuelec_frame_buffer->add(lbl, *it, ee_framebuffer == *it);
+	}
+	guiSettings->addWithLabel(header+_(" FRAME BUFFER"), emuelec_frame_buffer);
+
+	auto fbSave = [mWindow, configName, emuelec_frame_buffer, ee_videomode, ee_screen] (std::string selectedFB) {
+		if (emuelec_frame_buffer->changed()) {
+			if (selectedFB == "auto")
+				selectedFB = "";
+
+			std::string cfgName = "framebuffer."+ee_videomode;
+			if (!configName.empty())
+				cfgName = configName+"."+cfgName;
+
+			SystemConf::getInstance()->set(cfgName, selectedFB);
+			mWindow->displayNotificationMessage(_U("\uF011  ") + _("A REBOOT OF THE SYSTEM IS REQUIRED TO APPLY THE NEW CONFIGURATION"));
+
+			cfgName = "framebuffer_border."+ee_videomode;
+			if (!configName.empty())
+				cfgName = configName+".framebuffer_border."+ee_videomode;
+
+			if (selectedFB == "") {
+				SystemConf::getInstance()->set(cfgName, "");
+				return;
+			}
+
+			std::string result = "0 0 "+
+				std::to_string(ee_screen.width-1)+" "+
+				std::to_string(ee_screen.height-1);
+
+			SystemConf::getInstance()->set(cfgName, result);
+		}
+	};
+	
+	emuelec_frame_buffer->setSelectedChangedCallback([mWindow, configName, emuelec_frame_buffer, fbSave, ee_videomode, ee_screen](std::string name)
+	{
+		fbSave(emuelec_frame_buffer->getSelected());
+	});
+
+	guiSettings->addEntry(_("ADJUST FRAME BORDERS"), true, [mWindow, configName, ee_videomode, ee_framebuffer, ee_screen] {
+		static sScreenBorders ee_borders;
+		ee_borders.left = 0.0f;
+		ee_borders.right = 0.0f;
+		ee_borders.top = 0.0f;
+		ee_borders.bottom = 0.0f;
+
+		std::string cfgName = "framebuffer_border."+ee_videomode;
+		if (!configName.empty())
+			cfgName = configName+"."+cfgName;
+
+		std::string str_ee_offsets = SystemConf::getInstance()->get(cfgName);
+		if (!str_ee_offsets.empty()) {
+			std::vector<int> savedBorders = int_explode(str_ee_offsets, ' ');
+			if (savedBorders.size() == 4) {
+				ee_borders.left = (float) savedBorders[0];
+				ee_borders.top = (float) savedBorders[1];
+				ee_borders.right = (float) savedBorders[2];
+				ee_borders.bottom = (float) savedBorders[3];
+			}
+		}
+
+		GuiSettings* bordersConfig = new GuiSettings(mWindow, _("FRAME BORDERS"));
+		if (ee_framebuffer.empty())
+			return;
+
+		float width = (float)ee_screen.width;
+		float height = (float)ee_screen.height;
+
+		// borders
+		std::shared_ptr<SliderComponent> fb_borders[] = {
+			std::make_shared<SliderComponent>(mWindow, 0.0f, width, 1.0f, "px"),
+			std::make_shared<SliderComponent>(mWindow, 0.0f, height, 1.0f, "px"),
+			std::make_shared<SliderComponent>(mWindow, 0.0f, width, 1.0f, "px"),
+			std::make_shared<SliderComponent>(mWindow, 0.0f, height, 1.0f, "px")
+		};
+
+		fb_borders[0]->setValue(ee_borders.left);
+		fb_borders[1]->setValue(ee_borders.top);
+		fb_borders[2]->setValue((ee_borders.right > 0.0f) ? width-ee_borders.right-1 : 0.0f);
+		fb_borders[3]->setValue((ee_borders.bottom > 0.0f) ? height-ee_borders.bottom-1 : 0.0f);
+
+		fb_borders[0]->setOnValueChanged([fb_borders] (float val) {
+			fb_borders[2]->setValue(val);
+		});
+		fb_borders[1]->setOnValueChanged([fb_borders] (float val) {
+			fb_borders[3]->setValue(val);
+		});
+
+		bordersConfig->addWithLabel(_("LEFT BORDER"), fb_borders[0]);
+		bordersConfig->addWithLabel(_("TOP BORDER"), fb_borders[1]);
+		bordersConfig->addWithLabel(_("RIGHT BORDER"), fb_borders[2]);
+		bordersConfig->addWithLabel(_("BOTTOM BORDER"), fb_borders[3]);
+
+		bordersConfig->addSaveFunc([mWindow, configName, ee_videomode, ee_screen, fb_borders]()
+		{
+			int borders[4] = {0,0,0,0};
+			borders[0] = (int) fb_borders[0]->getValue();
+			borders[1] = (int) fb_borders[1]->getValue();
+			borders[2] = (int) fb_borders[2]->getValue();
+			borders[3] = (int) fb_borders[3]->getValue();
+
+			std::string result = std::to_string(borders[0])+" "+
+				std::to_string(borders[1])+" "+
+				std::to_string(ee_screen.width-(borders[2])-1)+" "+
+				std::to_string(ee_screen.height-(borders[3])-1);
+
+			std::string cfgName = "framebuffer_border."+ee_videomode;
+			SystemConf::getInstance()->set(cfgName, result);
+			if (!configName.empty())
+				SystemConf::getInstance()->set(configName+"."+cfgName, result);
+
+			runSystemCommand("ee_set_borders "+result, "", nullptr);
+		});
+
+		mWindow->pushGui(bordersConfig);
+	});
+
+}
+
+#endif
+
 void GuiMenu::openDangerZone(Window* mWindow, std::string configName)
 {
 
@@ -742,6 +1017,12 @@ void GuiMenu::openDangerZone(Window* mWindow, std::string configName)
         
 
          });
+#endif
+
+#ifdef _ENABLEEMUELEC
+
+		addFrameBufferOptions(mWindow, dangerZone, "ee_es", "ES");
+		addFrameBufferOptions(mWindow, dangerZone, "ee_emu", "EMU");
 #endif
 
     dangerZone->addEntry(_("CLOUD BACKUP SETTINGS AND GAME SAVES"), true, [mWindow] { 
@@ -900,24 +1181,7 @@ void GuiMenu::addEntry(std::string name, bool add_arrow, const std::function<voi
 
 	ComponentListRow row;
 
-	if (!iconName.empty())
-	{
-		std::string iconPath = theme->getMenuIcon(iconName);
-		if (!iconPath.empty())
-		{
-			// icon
-			auto icon = std::make_shared<ImageComponent>(mWindow, true);
-			icon->setImage(iconPath);
-			icon->setColorShift(theme->Text.color);
-			icon->setResize(0, theme->Text.font->getLetterHeight() * 1.25f);
-			row.addElement(icon, false);
-
-			// spacer between icon and text
-			auto spacer = std::make_shared<GuiComponent>(mWindow);
-			spacer->setSize(10, 0);
-			row.addElement(spacer, false);
-		}
-	}
+	MenuComponent::addMenuIcon(mWindow, row, iconName);
 
 	auto text = std::make_shared<TextComponent>(mWindow, name, font, color);
 	row.addElement(text, true);
@@ -1321,7 +1585,7 @@ void GuiMenu::openDeveloperSettings()
 
 	auto invertJoy = std::make_shared<SwitchComponent>(mWindow);
 	invertJoy->setState(Settings::getInstance()->getBool("InvertButtons"));
-	s->addWithLabel(_("SWITCH A & B BUTTONS IN EMULATIONSTATION"), invertJoy);
+	s->addWithDescription(_("SWITCH CONFIRM & CANCEL BUTTONS IN EMULATIONSTATION"), _("Switches the South and East buttons' functionality"), invertJoy);
 	s->addSaveFunc([this, s, invertJoy]
 	{
 		if (Settings::getInstance()->setBool("InvertButtons", invertJoy->getState()))
@@ -1345,7 +1609,24 @@ void GuiMenu::openDeveloperSettings()
 	s->addWithLabel(_("CONTROL EMULATIONSTATION WITH FIRST JOYSTICK ONLY"), firstJoystickOnly);
 	s->addSaveFunc([this, firstJoystickOnly] { Settings::getInstance()->setBool("FirstJoystickOnly", firstJoystickOnly->getState()); });
 
+#if !defined(WIN32)
+	{
+	  auto gun_mt = std::make_shared<SliderComponent>(mWindow, 0.f, 10.f, 0.1f, "%");
+	  gun_mt->setValue(Settings::getInstance()->getFloat("GunMoveTolerence"));
+	  s->addWithLabel(_("GUN MOVE TOLERENCE"), gun_mt);
+	  s->addSaveFunc([gun_mt] {
+	    Settings::getInstance()->setFloat("GunMoveTolerence", gun_mt->getValue());
+	  });
+	}
+#endif
+
 #if defined(WIN32)
+
+	auto hidJoysticks = std::make_shared<SwitchComponent>(mWindow);
+	hidJoysticks->setState(Settings::getInstance()->getBool("HidJoysticks"));
+	s->addWithLabel(_("ENABLE HID JOYSTICK DRIVERS"), hidJoysticks);
+	s->addSaveFunc([this, hidJoysticks] { Settings::getInstance()->setBool("HidJoysticks", hidJoysticks->getState()); });
+	
 	// Network Indicator
 	auto networkIndicator = std::make_shared<SwitchComponent>(mWindow);
 	networkIndicator->setState(Settings::getInstance()->getBool("ShowNetworkIndicator"));
@@ -1519,20 +1800,23 @@ void GuiMenu::openSystemSettings()
 #ifdef _ENABLEEMUELEC
 	auto emuelec_timezones = std::make_shared<OptionListComponent<std::string> >(mWindow, _("TIMEZONE"), false);
 	std::string currentTimezone = SystemConf::getInstance()->get("system.timezone");
-	if (currentTimezone.empty())
-		currentTimezone = std::string(getShOutput(R"(/usr/bin/emuelec-utils current_timezone)"));
-	std::string a;
-	for(std::stringstream ss(getShOutput(R"(/usr/bin/emuelec-utils timezones)")); getline(ss, a, ','); ) {
-		emuelec_timezones->add(a, a, currentTimezone == a); // emuelec
-	}
-	s->addWithLabel(_("TIMEZONE"), emuelec_timezones);
-	s->addSaveFunc([emuelec_timezones] {
-		if (emuelec_timezones->changed()) {
-			std::string selectedTimezone = emuelec_timezones->getSelected();
-			runSystemCommand("ln -sf /usr/share/zoneinfo/" + selectedTimezone + " $(readlink /etc/localtime)", "", nullptr);
+	if (!test_shell.compare("success")) {
+		if (currentTimezone.empty())
+			currentTimezone = std::string(getShOutput(R"(/usr/bin/emuelec-utils current_timezone)"));
+		std::string a;
+		for(std::stringstream ss(getShOutput(R"(/usr/bin/emuelec-utils timezones)")); getline(ss, a, ','); ) {
+			emuelec_timezones->add(a, a, currentTimezone == a); // emuelec
 		}
-		SystemConf::getInstance()->set("system.timezone", emuelec_timezones->getSelected());
-	});
+		s->addWithLabel(_("TIMEZONE"), emuelec_timezones);
+		s->addSaveFunc([emuelec_timezones] {
+			if (emuelec_timezones->changed()) {
+				std::string selectedTimezone = emuelec_timezones->getSelected();
+				runSystemCommand("ln -sf /usr/share/zoneinfo/" + selectedTimezone + " $(readlink /etc/localtime)", "", nullptr);
+			}
+			SystemConf::getInstance()->set("system.timezone", emuelec_timezones->getSelected());
+		});
+	}
+
 #endif
 
 	// language choice
@@ -1553,9 +1837,11 @@ void GuiMenu::openSystemSettings()
 	language_choice->add("ESPAÑOL", 	     "es_ES", language == "es_ES" || language == "es");
 	language_choice->add("ESPAÑOL MEXICANO",     "es_MX", language == "es_MX");
 	language_choice->add("BASQUE",               "eu_ES", language == "eu_ES");
+	language_choice->add("SUOMI",                "fi_FI", language == "fi_FI");
 	language_choice->add("FRANÇAIS",             "fr_FR", language == "fr_FR" || language == "fr");
 	language_choice->add("עברית",                "he_IL", language == "he_IL");
 	language_choice->add("HUNGARIAN",            "hu_HU", language == "hu_HU");
+	language_choice->add("BAHASA INDONESIA",     "id_ID", language == "id_ID");
 	language_choice->add("ITALIANO",             "it_IT", language == "it_IT");
 	language_choice->add("JAPANESE", 	     "ja_JP", language == "ja_JP");
 	language_choice->add("KOREAN",   	     "ko_KR", language == "ko_KR" || language == "ko");
@@ -1696,7 +1982,7 @@ void GuiMenu::openSystemSettings()
 	int brighness;
 	if (ApiSystem::getInstance()->getBrightness(brighness))
 	{
-		auto brightnessComponent = std::make_shared<SliderComponent>(mWindow, 5.f, 100.f, 5.f, "%");
+		auto brightnessComponent = std::make_shared<SliderComponent>(mWindow, 1.f, 100.f, 5.f, "%");
 		brightnessComponent->setValue(brighness);
 		brightnessComponent->setOnValueChanged([](const float &newVal)
 		{
@@ -2221,7 +2507,7 @@ void GuiMenu::addDecorationSetOptionListComponent(Window* window, GuiSettings* p
 
 
 
-void GuiMenu::addFeatureItem(Window* window, GuiSettings* settings, const CustomFeature& feat, const std::string& configName)
+void GuiMenu::addFeatureItem(Window* window, GuiSettings* settings, const CustomFeature& feat, const std::string& configName, const std::string& system, const std::string& emulator, const std::string& core)
 {	
 	if (feat.preset == "hidden")
 		return;
@@ -2355,7 +2641,7 @@ void GuiMenu::addFeatureItem(Window* window, GuiSettings* settings, const Custom
 	{
 		item->add(_("AUTO"), "auto", storedValue.empty() || storedValue == "auto");
 
-		auto shaders = ApiSystem::getInstance()->getShaderList();
+		auto shaders = ApiSystem::getInstance()->getShaderList(configName != "global" ? system : "", configName != "global" ? emulator : "", configName != "global" ? core : "");
 		if (shaders.size() > 0)
 		{
 			item->add(_("NONE"), "none", storedValue == "none");
@@ -2439,7 +2725,7 @@ static bool hasGlobalFeature(const std::string& name)
 	return CustomFeatures::GlobalFeatures.hasGlobalFeature(name);
 }
 
-void GuiMenu::addFeatures(const VectorEx<CustomFeature>& features, Window* window, GuiSettings* settings, const std::string& configName, const std::string& defaultGroupName, bool addDefaultGroupOnlyIfNotFirst)
+void GuiMenu::addFeatures(const VectorEx<CustomFeature>& features, Window* window, GuiSettings* settings, const std::string& configName, const std::string& system, const std::string& emulator, const std::string& core, const std::string& defaultGroupName, bool addDefaultGroupOnlyIfNotFirst)
 {
 	bool firstGroup = true;
 	
@@ -2464,7 +2750,7 @@ void GuiMenu::addFeatures(const VectorEx<CustomFeature>& features, Window* windo
 		{
 			if (feat.submenu.empty())
 			{
-				addFeatureItem(window, settings, feat, configName);
+				addFeatureItem(window, settings, feat, configName, system, emulator, core);
 				continue;
 			}
 
@@ -2476,12 +2762,12 @@ void GuiMenu::addFeatures(const VectorEx<CustomFeature>& features, Window* windo
 			auto items = features.where([feat](auto x) { return x.preset != "hidden" && x.submenu == feat.submenu; });
 			if (items.size() > 0)
 			{
-				settings->addEntry(pgettext("game_options", feat.submenu.c_str()), true, [window, configName, feat, items]
+				settings->addEntry(pgettext("game_options", feat.submenu.c_str()), true, [window, configName, feat, items, system, emulator, core]
 				{
 					GuiSettings* groupSettings = new GuiSettings(window, pgettext("game_options", feat.submenu.c_str()));
 
 					for (auto feat : items)
-						addFeatureItem(window, groupSettings, feat, configName);
+						addFeatureItem(window, groupSettings, feat, configName, system, emulator, core);
 
 					window->pushGui(groupSettings);
 				});
@@ -2585,7 +2871,7 @@ void GuiMenu::openGamesSettings()
 #ifndef _ENABLEEMUELEC	
 	if (ApiSystem::getInstance()->isScriptingSupported(ApiSystem::SHADERS) && !hasGlobalFeature("shaderset"))
 	{
-		auto installedShaders = ApiSystem::getInstance()->getShaderList();
+		auto installedShaders = ApiSystem::getInstance()->getShaderList("", "", "");
 		if (installedShaders.size() > 0)
 		{
 #endif
@@ -2776,7 +3062,7 @@ void GuiMenu::openGamesSettings()
 	}
 	
 	// Load global custom features
-	addFeatures(CustomFeatures::GlobalFeatures, window, s, "global", _("DEFAULT GLOBAL SETTINGS"));
+	addFeatures(CustomFeatures::GlobalFeatures, window, s, "global", "", "", "", _("DEFAULT GLOBAL SETTINGS"));
 	
 	if (!hasGlobalFeature("disableautocontrollers") && SystemData::sSystemVector.any([](auto sys) { return !sys->getCompatibleCoreNames(EmulatorFeatures::autocontrollers).empty(); }))
 	{
@@ -3012,31 +3298,61 @@ void GuiMenu::openControllersSettings(int autoSel)
 
 	Window* window = mWindow;
 	
+	s->addGroup(_("SETTINGS"));
+
 	// CONTROLLER CONFIGURATION
 	s->addEntry(_("CONTROLLER MAPPING"), false, [window, this, s]
 	{
 		window->pushGui(new GuiMsgBox(window,
-			_("YOU ARE GOING TO MAP A CONTROLLER. MAP BASED ON THE BUTTON'S POSITION "
-				"RELATIVE TO ITS EQUIVALENT ON A SNES CONTROLLER, NOT ITS PHYSICAL LABEL. "
-				"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, USE THE SELECT BUTTON. SKIP "
-				"ALL BUTTONS/STICKS YOU DO NOT HAVE BY HOLDING ANY KEY. PRESS THE "
-				"SOUTH BUTTON TO CONFIRM WHEN DONE."), 
+			_("YOU ARE GOING TO MAP A CONTROLLER. MAP BASED ON THE BUTTON'S POSITION, "
+				"NOT ITS PHYSICAL LABEL. IF YOU DO NOT HAVE A SPECIAL BUTTON FOR HOTKEY, "
+				"USE THE SELECT BUTTON. SKIP ALL BUTTONS/STICKS YOU DO NOT HAVE BY "
+				"HOLDING ANY BUTTON. PRESS THE SOUTH BUTTON TO CONFIRM WHEN DONE."),
 			_("OK"), [window, this, s] { window->pushGui(new GuiDetectDevice(window, false, [this, s] { s->setSave(false); delete s; this->openControllersSettings(); })); },
 			_("CANCEL"), nullptr,
 			GuiMsgBoxIcon::ICON_INFORMATION));
 	});
+	
+	bool sindenguns_menu = false;
+	bool wiiguns_menu = false;
+
+	for (auto gun : InputManager::getInstance()->getGuns())
+	{
+		sindenguns_menu |= gun->needBorders();
+		wiiguns_menu |= gun->name() == "wiigun calibrated";
+	}
+
+	for (auto joy : InputManager::getInstance()->getInputConfigs())
+		wiiguns_menu |= joy->getDeviceName() == "Nintendo Wii Remote";
+
+	if (sindenguns_menu)
+		s->addEntry(_("SINDEN GUN SETTINGS"), true, [this] { openControllersSpecificSettings_sindengun(); });
+
+	if (wiiguns_menu)
+		s->addEntry(_("WIIMOTE GUN SETTINGS"), true, [this] { openControllersSpecificSettings_wiigun(); });
 
 	if (ApiSystem::getInstance()->isScriptingSupported(ApiSystem::BLUETOOTH))
 	{
-		// PAIR A BLUETOOTH CONTROLLER OR BT AUDIO DEVICE
-		s->addEntry(_("PAIR A BLUETOOTH DEVICE"), false, [window] { ThreadedBluetooth::start(window); });
+		s->addGroup(_("BLUETOOTH"));
 
-		// FORGET BLUETOOTH CONTROLLERS OR BT AUDIO DEVICES
-		s->addEntry(_("FORGET A BLUETOOTH DEVICE"), false, [window, this, s]
+		// PAIR A BLUETOOTH CONTROLLER
+		s->addEntry(_("PAIR BLUETOOTH PADS AUTOMATICALLY"), false, [window] { ThreadedBluetooth::start(window); });
+
+#if defined(BATOCERA) || defined(WIN32)
+		// PAIR A BLUETOOTH CONTROLLER OR BT AUDIO DEVICE
+		s->addEntry(_("PAIR A BLUETOOTH DEVICE MANUALLY"), false, [window, this, s]
 		{
-			window->pushGui(new GuiBluetooth(window));
+			if (ThreadedBluetooth::isRunning())
+				window->pushGui(new GuiMsgBox(window, _("BLUETOOTH SCAN IS ALREADY RUNNING.")));
+			else
+				window->pushGui(new GuiBluetoothPair(window));
 		});
+#endif
+		// FORGET BLUETOOTH CONTROLLERS OR BT AUDIO DEVICES
+		s->addEntry(_("FORGET A BLUETOOTH DEVICE"), false, [window, this, s] { window->pushGui(new GuiBluetoothForget(window)); });
 	}
+
+	s->addGroup(_("DISPLAY OPTIONS"));
 
 	// CONTROLLER ACTIVITY
 	auto activity = std::make_shared<SwitchComponent>(mWindow);
@@ -3054,28 +3370,8 @@ void GuiMenu::openControllersSettings(int autoSel)
 	if (Settings::getInstance()->getBool("ShowControllerActivity"))
 		s->addSwitch(_("SHOW CONTROLLER BATTERY LEVEL"), "ShowControllerBattery", true);
 
-#ifdef BATOCERA
-	bool sindenguns_menu = false;
-	for (auto gun : InputManager::getInstance()->getGuns())
-	  if (gun->needBorders())
-	    sindenguns_menu = true;
-	if(sindenguns_menu) {
-	  s->addEntry(_("SINDEN GUN SETTINGS"), true, [this] { openControllersSpecificSettings_sindengun(); });
-	}
-#endif
 
-#ifdef BATOCERA
-	bool wiiguns_menu = false;
-	for (auto gun : InputManager::getInstance()->getGuns())
-	  if (gun->name() == "wiigun calibrated")
-	    wiiguns_menu = true;
-	for (auto joy : InputManager::getInstance()->getInputConfigs())
-	  if (joy->getDeviceName() == "Nintendo Wii Remote")
-	    wiiguns_menu = true;
-	if(wiiguns_menu) {
-	  s->addEntry(_("WIIMOTE GUN SETTINGS"), true, [this] { openControllersSpecificSettings_wiigun(); });
-	}
-#endif
+	s->addGroup(_("PLAYER ASSIGNMENTS"));
 
 	ComponentListRow row;
 
@@ -3086,17 +3382,17 @@ void GuiMenu::openControllersSettings(int autoSel)
 	clearLoadedInput();
 
 	std::vector<std::shared_ptr<OptionListComponent<StrInputConfig *>>> options;
-	//char strbuf[256];
 
 	auto configList = InputManager::getInstance()->getInputConfigs();
 
 	for (int player = 0; player < MAX_PLAYERS; player++) 
-	{
-		std::string label = Utils::String::format(_("P%i'S CONTROLLER").c_str(), player + 1);
+	{		
 		std::string confName = Utils::String::format("INPUT P%iNAME", player + 1);
 		std::string confGuid = Utils::String::format("INPUT P%iGUID", player + 1);
+		std::string confPath = Utils::String::format("INPUT P%iPATH", player + 1);
 
-		LOG(LogInfo) << player + 1 << " " << confName << " " << confGuid;
+		std::string label = Utils::String::format(_("P%i'S CONTROLLER").c_str(), player + 1);
+
 		auto inputOptionList = std::make_shared<OptionListComponent<StrInputConfig *> >(mWindow, label, false);
 		inputOptionList->add(_("default"), nullptr, false);
 		options.push_back(inputOptionList);
@@ -3104,28 +3400,26 @@ void GuiMenu::openControllersSettings(int autoSel)
 		// Checking if a setting has been saved, else setting to default
 		std::string configuratedName = Settings::getInstance()->getString(confName);
 		std::string configuratedGuid = Settings::getInstance()->getString(confGuid);
+		std::string configuratedPath = Settings::getInstance()->getString(confPath);
+
 		bool found = false;
 
 		// For each available and configured input
 		for (auto config : configList)
 		{
-			// create name
-			std::stringstream dispNameSS;
-			dispNameSS << "#" << config->getDeviceIndex() << " ";
+#if WIN32
+			std::string displayName = config->getDeviceName();
+#else
+			std::string displayName = "#" + std::to_string(config->getDeviceIndex()) + " " + config->getDeviceName();
+#endif
 
-			std::string deviceName = config->getDeviceName();
-			if (deviceName.size() > 25) 
-				dispNameSS << deviceName.substr(0, 16) << "..." << deviceName.substr(deviceName.size() - 5, deviceName.size() - 1);
-			else
-				dispNameSS << deviceName;
+			bool foundFromConfig = !configuratedPath.empty() ? config->getSortDevicePath() == configuratedPath : configuratedName == config->getDeviceName() && configuratedGuid == config->getDeviceGUIDString();
 
-			std::string displayName = dispNameSS.str();
-
-			bool foundFromConfig = configuratedName == config->getDeviceName() && configuratedGuid == config->getDeviceGUIDString();
 			int deviceID = config->getDeviceId();
+
 			// Si la manette est configurée, qu'elle correspond a la configuration, et qu'elle n'est pas
 			// deja selectionnée on l'ajoute en séléctionnée
-			StrInputConfig* newInputConfig = new StrInputConfig(config->getDeviceName(), config->getDeviceGUIDString());
+			StrInputConfig* newInputConfig = new StrInputConfig(config->getDeviceName(), config->getDeviceGUIDString(), config->getSortDevicePath());
 			mLoadedInput.push_back(newInputConfig);
 
 			if (foundFromConfig && std::find(alreadyTaken.begin(), alreadyTaken.end(), deviceID) == alreadyTaken.end() && !found) 
@@ -3133,13 +3427,22 @@ void GuiMenu::openControllersSettings(int autoSel)
 				found = true;
 				alreadyTaken.push_back(deviceID);
 				
-				LOG(LogWarning) << "adding entry for player" << player << " (selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
+				LOG(LogWarning) << "adding entry for player" << player << " (selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString() << "  " << config->getDevicePath();
+
+#if WIN32
+				inputOptionList->addEx(displayName, config->getDevicePath(), newInputConfig, true, false, false);
+#else
 				inputOptionList->add(displayName, newInputConfig, true);
+#endif
 			}
 			else 
 			{
-				LOG(LogInfo) << "adding entry for player" << player << " (not selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
+				LOG(LogInfo) << "adding entry for player" << player << " (not selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString() << "  " << config->getDevicePath();
+#if WIN32
+				inputOptionList->addEx(displayName, config->getDevicePath(), newInputConfig, false, false, false);
+#else
 				inputOptionList->add(displayName, newInputConfig, false);
+#endif
 			}
 		}
 
@@ -3156,10 +3459,9 @@ void GuiMenu::openControllersSettings(int autoSel)
 
 		for (int player = 0; player < MAX_PLAYERS; player++) 
 		{
-			std::stringstream sstm;
-			sstm << "INPUT P" << player + 1;
-			std::string confName = sstm.str() + "NAME";
-			std::string confGuid = sstm.str() + "GUID";
+			std::string confName = Utils::String::format("INPUT P%iNAME", player + 1);
+			std::string confGuid = Utils::String::format("INPUT P%iGUID", player + 1);
+			std::string confPath = Utils::String::format("INPUT P%iPATH", player + 1);
 
 			auto input = options.at(player);
 
@@ -3168,14 +3470,15 @@ void GuiMenu::openControllersSettings(int autoSel)
 			{
 				changed |= Settings::getInstance()->setString(confName, "DEFAULT");
 				changed |= Settings::getInstance()->setString(confGuid, "");
+				changed |= Settings::getInstance()->setString(confPath, "");
 			}
 			else if (input->changed())
 			{
-				LOG(LogWarning) << "Found the selected controller ! : name in list  = " << input->getSelectedName();
-				LOG(LogWarning) << "Found the selected controller ! : guid  = " << selected->deviceGUIDString;
+				LOG(LogInfo) << "Found the selected controller : " << input->getSelectedName() << ", " << selected->deviceGUIDString << ", " << selected->devicePath;
 
 				changed |= Settings::getInstance()->setString(confName, selected->deviceName);
 				changed |= Settings::getInstance()->setString(confGuid, selected->deviceGUIDString);
+				changed |= Settings::getInstance()->setString(confPath, selected->devicePath);
 			}			
 		}
 
@@ -3202,9 +3505,19 @@ void GuiMenu::openControllersSpecificSettings_sindengun()
 
 	s->addOptionList(_("BORDER SIZE"), { { _("AUTO"), "auto" },{ _("THIN") , "thin" },{ _("MEDIUM"), "medium" },{ _("BIG"), "big" } }, "controllers.guns.borderssize", false);
 
+	std::string selectedBordersMode = SystemConf::getInstance()->get("controllers.guns.bordersmode");
+	auto bordersmode_set = std::make_shared<OptionListComponent<std::string> >(mWindow, _("BORDER MODE"), false);
+	border_set->add(_("AUTO"),   "",       ""       == selectedSet);
+	border_set->add(_("NORMAL"),   "NORMAL",   "NORMAL"   == selectedSet);
+	border_set->add(_("IN GAME ONLY"), "INGAMEONLY", "INGAMEONLY" == selectedSet);
+	border_set->add(_("HIDDEN"),    "HIDDEN",    "HIDDEN"    == selectedSet);
+
+	s->addOptionList(_("BORDER MODE"), { { _("AUTO"), "auto" },{ _("NORMAL") , "normal" },{ _("IN GAME ONLY"), "gameonly" },{ _("HIDDEN"), "hidden" } }, "controllers.guns.bordersmode", false);
+
 	std::string baseMode = SystemConf::getInstance()->get("controllers.guns.recoil");
 	auto sindenmode_choices = std::make_shared<OptionListComponent<std::string> >(mWindow, _("RECOIL"), false);
 	sindenmode_choices->add(_("AUTO"), "auto", baseMode.empty() || baseMode == "auto");
+	sindenmode_choices->add(_("DISABLED"), "disabled", baseMode == "disabled");
 	sindenmode_choices->add(_("GUN"), "gun", baseMode == "gun");
 	sindenmode_choices->add(_("MACHINE GUN"), "machinegun", baseMode == "machinegun");
 	sindenmode_choices->add(_("QUIET GUN"), "gun-quiet", baseMode == "gun-quiet");
@@ -3217,6 +3530,7 @@ void GuiMenu::openControllersSpecificSettings_sindengun()
 	    ApiSystem::getInstance()->replugControllers_sindenguns();
 	  }
 	});
+
 	mWindow->pushGui(s);
 }
 
@@ -3398,7 +3712,11 @@ void GuiMenu::openThemeConfiguration(Window* mWindow, GuiComponent* s, std::shar
 				if (it->name == selectedName)
 					selectedColorSet = it;
 
-			std::shared_ptr<OptionListComponent<std::string>> item = std::make_shared<OptionListComponent<std::string> >(mWindow, _(("THEME " + Utils::String::toUpper(subset)).c_str()), false);
+			std::string displayName;
+			if (!themeColorSets.empty())
+				displayName = themeColorSets.cbegin()->subSetDisplayName;
+
+			std::shared_ptr<OptionListComponent<std::string>> item = std::make_shared<OptionListComponent<std::string> >(mWindow, displayName.empty() ? _(("THEME " + Utils::String::toUpper(subset)).c_str()) : displayName, false);
 			item->setTag(!perSystemSettingName.empty() ? perSystemSettingName : settingName);
 
 			std::string defaultName;
@@ -3426,8 +3744,7 @@ void GuiMenu::openThemeConfiguration(Window* mWindow, GuiComponent* s, std::shar
 				item->selectFirstItem();
 
 			if (!themeColorSets.empty())
-			{
-				std::string displayName = themeColorSets.cbegin()->subSetDisplayName;
+			{				
 				if (!displayName.empty())
 				{
 					bool hasApplyToSubset = themeColorSets.cbegin()->appliesTo.size() > 0;
@@ -3462,7 +3779,19 @@ void GuiMenu::openThemeConfiguration(Window* mWindow, GuiComponent* s, std::shar
 						themeconfig->addGroup(_("THEME OPTIONS"));
 					}
 
-					if (!prefix.empty())
+					if (displayName == "-" && item->size() <= 1)
+					{
+						ComponentListRow row;
+						row.selectable = false;
+
+						auto font = ThemeData::getMenuTheme()->TextSmall.font;
+						auto text = std::make_shared<TextComponent>(mWindow, "", font, 0); 						
+						text->setLineSpacing(1.0f);
+						row.addElement(text, true);						
+
+						themeconfig->addRow(row);
+					}
+					else if (!prefix.empty())
 						themeconfig->addWithDescription(displayName, prefix, item);
 					else if (!defaultName.empty())
 						themeconfig->addWithDescription(displayName, _("DEFAULT VALUE") + " : " + defaultName, item);
@@ -4254,9 +4583,9 @@ void GuiMenu::openQuitMenu_static(Window *window, bool quickAccessMenu, bool ani
 
 	if (ApiSystem::getInstance()->isScriptingSupported(ApiSystem::SUSPEND))
 	{
-		s->addEntry(_("SUSPEND SYSTEM"), false, [window] {
+		s->addEntry(_("SUSPEND SYSTEM"), false, [window, s] {
 			window->pushGui(new GuiMsgBox(window, _("REALLY SUSPEND ?"),
-				_("YES"), [] { ApiSystem::getInstance()->suspend(); },
+				_("YES"), [s] { s->close(); ApiSystem::getInstance()->suspend(); },
 				_("NO"), nullptr));
 		}, "iconFastShutdown");
 	}
@@ -4362,38 +4691,6 @@ void GuiMenu::popGameConfigurationGui(Window* mWindow, FileData* fileData)
 std::shared_ptr<OptionListComponent<std::string>> GuiMenu::btn_choice = nullptr;
 std::shared_ptr<OptionListComponent<std::string>> GuiMenu::del_choice = nullptr;
 std::shared_ptr<OptionListComponent<std::string>> GuiMenu::edit_choice = nullptr;
-
-static std::vector<std::string> explode(std::string sData, char delimeter=',')
-{
-	std::vector<std::string> arr;	
-	std::stringstream ssData(sData);
-	std::string datum;
-	while(std::getline(ssData, datum, delimeter))
-	{
-			arr.push_back(datum);
-	}
-	return arr;
-}
-
-static std::vector<int> int_explode(std::string sData, char delimeter=',')
-{
-	std::vector<int> arr;	
-	std::stringstream ssData(sData);
-	std::string datum;
-	while(std::getline(ssData, datum, delimeter))
-	{
-			arr.push_back( atoi(datum.c_str()));
-	}
-	return arr;
-}
-
-static std::string toupper(std::string s)
-{
-	std::for_each(s.begin(), s.end(), [](char & c){
-	    c = ::toupper(c);
-	});	
-	return s;
-}
 
 std::shared_ptr<OptionListComponent<std::string>> GuiMenu::createJoyBtnRemapOptionList(Window *window, std::string prefixName, int btnIndex)
 {
@@ -4958,6 +5255,80 @@ void GuiMenu::popSpecificConfigurationGui(Window* mWindow, std::string title, st
 		systemConfiguration->addSwitch(_("Use HLE BIOS"), configName + ".hlebios", false);
 	}
 
+// Frame Buffer Video Mode.
+
+	if (systemData->isFeatureSupported(currentEmulator, currentCore, EmulatorFeatures::nativevideo))
+	{
+		std::string ee_nativevideomode = SystemConf::getInstance()->get(configName + ".nativevideo");
+		std::string fb_conf = configName+"."+ee_nativevideomode;
+		std::string ee_framebuffer = SystemConf::getInstance()->get(fb_conf+".ee_framebuffer");
+		if (ee_framebuffer.empty()) {
+			ee_framebuffer = "auto";
+		}
+
+		std::vector<std::string> reslist;
+			reslist.push_back("3840 2160");
+			reslist.push_back("2560 1440");
+			reslist.push_back("1920 1080");
+			reslist.push_back("1280 720");
+			reslist.push_back("720 480");
+			reslist.push_back("768 576");
+			reslist.push_back("1680 1050");
+			reslist.push_back("1440 900");
+			reslist.push_back("1280 1024");
+			reslist.push_back("1280 960");
+			reslist.push_back("1280 800");
+			reslist.push_back("1024 768");
+			reslist.push_back("800 600");
+			reslist.push_back("640 480");
+			reslist.push_back("320 240");
+
+		int* ee_dimensions = getVideoModeDimensions(ee_nativevideomode, reslist);
+
+		static sScreenDimensions ee_screen;
+		ee_screen.width = ee_dimensions[0];
+		ee_screen.height = ee_dimensions[1];
+
+		auto emuelec_frame_buffer = std::make_shared< OptionListComponent<std::string> >(mWindow, "VIDEO MODE", false);
+
+		emuelec_frame_buffer->add("auto", "auto", ee_framebuffer == "auto");
+		for (auto it = reslist.cbegin(); it != reslist.cend(); it++) {
+			std::string lbl = *it;
+			lbl = lbl.replace(lbl.find(" "),1,"x");
+			emuelec_frame_buffer->add(lbl, *it, ee_framebuffer == *it); 
+		}
+		systemConfiguration->addWithLabel(_("FRAME BUFFER"), emuelec_frame_buffer);
+
+		auto fbSave = [emuelec_frame_buffer, fb_conf, ee_screen] (std::string selectedFB) {
+			if (emuelec_frame_buffer->changed()) {
+				if (selectedFB == "auto")
+					selectedFB = "";
+
+				SystemConf::getInstance()->set(fb_conf+".ee_framebuffer", selectedFB);
+
+				if (selectedFB == "") {
+					SystemConf::getInstance()->set(fb_conf+".ee_offsets", "");
+					return;
+				}
+
+				std::string result = "0 0 "+
+					std::to_string(ee_screen.width-1)+" "+
+					std::to_string(ee_screen.height-1);
+
+				SystemConf::getInstance()->set(fb_conf+".ee_offsets", result);
+			}
+		};
+
+		emuelec_frame_buffer->setSelectedChangedCallback([emuelec_frame_buffer, fbSave, fb_conf, ee_screen](std::string name)
+		{
+			fbSave(emuelec_frame_buffer->getSelected());
+		});
+
+		systemConfiguration->addSaveFunc([emuelec_frame_buffer, fbSave, fb_conf, ee_screen] {
+			fbSave(emuelec_frame_buffer->getSelected());
+		});
+	}
+
 #endif 
 
 	// Screen ratio choice
@@ -5002,6 +5373,22 @@ void GuiMenu::popSpecificConfigurationGui(Window* mWindow, std::string title, st
 		systemConfiguration->addWithDescription(_("AUTO SAVE/LOAD ON GAME LAUNCH"), _("Load latest save state on game launch and save state when exiting game."), autosave_enabled);
 		systemConfiguration->addSaveFunc([configName, autosave_enabled] { SystemConf::getInstance()->set(configName + ".autosave", autosave_enabled->getSelected()); });
 	}
+#ifdef _ENABLEEMUELEC
+	if (systemData->isFeatureSupported(currentEmulator, currentCore, EmulatorFeatures::cloudsave))
+	{
+		auto enable_cloudsave = std::make_shared<SwitchComponent>(mWindow);
+		bool cloudSaveEnabled = SystemConf::getInstance()->get(configName + ".cloudsave") == "1";
+		enable_cloudsave->setState(cloudSaveEnabled);
+		systemConfiguration->addWithLabel(_("ENABLE CLOUD SAVE"), enable_cloudsave);
+
+		systemConfiguration->addSaveFunc([enable_cloudsave, mWindow, configName] {
+			bool cloudSaveEnabled = enable_cloudsave->getState();
+			SystemConf::getInstance()->set(configName + ".cloudsave", cloudSaveEnabled ? "1" : "0");
+			SystemConf::getInstance()->saveSystemConf();
+		});
+	}
+#endif
+	
 #ifdef _ENABLEEMUELEC
 	// Shaders preset
 	if (ApiSystem::getInstance()->isScriptingSupported(ApiSystem::SHADERS) &&
@@ -5052,7 +5439,7 @@ void GuiMenu::popSpecificConfigurationGui(Window* mWindow, std::string title, st
 	if (ApiSystem::getInstance()->isScriptingSupported(ApiSystem::SHADERS) &&
 		systemData->isFeatureSupported(currentEmulator, currentCore, EmulatorFeatures::shaders))
 	{
-		auto installedShaders = ApiSystem::getInstance()->getShaderList(systemData->getName());
+		auto installedShaders = ApiSystem::getInstance()->getShaderList(systemData->getName(), currentEmulator, currentCore);
 		if (installedShaders.size() > 0)
 		{
 			std::string currentShader = SystemConf::getInstance()->get(configName + ".shaderset");
@@ -5399,7 +5786,7 @@ void GuiMenu::popSpecificConfigurationGui(Window* mWindow, std::string title, st
 	}
 #endif
 	// Load per-game / per-emulator / per-system custom features
-	addFeatures(customFeatures, mWindow, systemConfiguration, configName, _("SETTINGS"), true);
+	addFeatures(customFeatures, mWindow, systemConfiguration, configName, systemData->getName(), currentEmulator.empty() ? systemData->getEmulator(true) : currentEmulator, currentCore.empty() ? systemData->getCore(true) : currentCore, _("SETTINGS"), true);
 
 	// automatic controller configuration
 	if (systemData->isFeatureSupported(currentEmulator, currentCore, EmulatorFeatures::autocontrollers))

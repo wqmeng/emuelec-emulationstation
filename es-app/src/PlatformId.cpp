@@ -27,6 +27,7 @@ namespace PlatformIds
 		{ "colecovision",			COLECOVISION },
 		{ "c64",					COMMODORE_64 },
 		{ "vic20",				COMMODORE_VIC20 },
+		{ "c16",				COMMODORE_PLUS4 },
 		{ "intellivision",			INTELLIVISION },
 		{ "macintosh",				MAC_OS },
 		{ "xbox",					XBOX },
@@ -181,6 +182,7 @@ namespace PlatformIds
 		{ "apfm1000",				APF_MP_1000 },
 		{ "camplynx",				CAMPUTER_LYNX },
 		{ "gamepock",				EPOCH_GAMEPOCKET },	
+		{ "wasm4",					WASM4 },
 
 		{ "ignore",					PLATFORM_IGNORE },
 		{ "invalid",				PLATFORM_COUNT }

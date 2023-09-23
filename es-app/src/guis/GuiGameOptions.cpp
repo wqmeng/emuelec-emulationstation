@@ -28,8 +28,8 @@
 #include "SystemConf.h"
 
 #ifdef _ENABLEEMUELEC
-#include "platform.h"
 #include <regex>
+#include "platform.h"
 #endif
 
 GuiGameOptions::GuiGameOptions(Window* window, FileData* game) : GuiComponent(window),
@@ -147,18 +147,21 @@ GuiGameOptions::GuiGameOptions(Window* window, FileData* game) : GuiComponent(wi
 	{
 		mMenu.addGroup(_("GAME"));
 
+ 
 		if (SaveStateRepository::isEnabled(game))
 		{
 			mMenu.addEntry(_("SAVE STATES"), false, [window, game, this]
 			{
-				mWindow->pushGui(new GuiSaveState(mWindow, game, [this, game](SaveState state)
-				{
-					LaunchGameOptions options;
-					options.saveStateInfo = state;
-					ViewController::get()->launch(game, options);
-				}));
-
-				this->close();
+					mWindow->pushGui(new GuiSaveState(mWindow, game, [this, game](SaveState state)
+					{
+						LaunchGameOptions options;
+						options.saveStateInfo = state;
+						ViewController::get()->launch(game, options);
+					}));
+#ifdef _ENABLEEMUELEC
+					guiSaveStateLoad(mWindow, game);
+#endif
+					this->close();
 			});
 		}
 		else
@@ -248,6 +251,25 @@ GuiGameOptions::GuiGameOptions(Window* window, FileData* game) : GuiComponent(wi
 
 
 			});
+#ifdef _ENABLEEMUELEC			
+			if (!isImageViewer) {
+				if (game->getMetadata(MetaDataId::Hidden) == "false")
+				{
+					mMenu.addEntry(_("HIDE GAME"), false, [this, game]
+					{
+						hideGame(game, true);
+						close();
+					});
+				}
+				else {
+					mMenu.addEntry(_("UNHIDE GAME"), false, [this, game]
+					{
+						hideGame(game, false);
+						close();
+					});
+				}
+			}
+#endif
 		}
 
 #ifdef _ENABLEEMUELEC
@@ -513,6 +535,28 @@ void GuiGameOptions::deleteGame(FileData* file)
 }
 
 #ifdef _ENABLEEMUELEC
+
+void GuiGameOptions::hideGame(FileData* file, bool hide)
+{
+	if (file->getType() != GAME)
+		return;
+
+	auto sourceFile = file->getSourceFileData();
+	file->setMetadata(MetaDataId::Hidden, (hide) ? "true" : "false");
+	ViewController::get()->onFileChanged(file, FILE_METADATA_CHANGED);
+
+	auto sys = sourceFile->getSystem();
+	if (sys->isGroupChildSystem())
+		sys = sys->getParentGroupSystem();
+
+	sys->getRootFolder()->getMetadata().setDirty();
+	
+	CollectionSystemManager::get()->deleteCollectionFiles(sourceFile);
+
+	auto view = ViewController::get()->getGameListView(sys, false);
+	if (view != nullptr)
+		ViewController::get()->reloadGameListView(view.get());
+}
 
 void GuiGameOptions::createMultidisc(FileData* file)
 {

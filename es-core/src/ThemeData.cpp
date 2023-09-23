@@ -15,6 +15,7 @@
 #include "anim/ThemeStoryboard.h"
 #include "Paths.h"
 #include "utils/HtmlColor.h"
+#include "utils/VectorEx.h"
 
 std::vector<std::string> ThemeData::sSupportedViews{ { "system" }, { "basic" }, { "detailed" }, { "grid" }, { "video" }, { "gamecarousel" }, { "menu" }, { "screen" }, { "splash" } };
 std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "gamecarousel" }, { "z-index" }, { "visible" },{ "manufacturer" } };
@@ -390,7 +391,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "iconL", PATH },
 		{ "iconR", PATH },
 		{ "iconStart", PATH },
-		{ "iconSelect", PATH } } },
+		{ "iconSelect", PATH },
+		{ "iconF1", PATH }, } },
 	{ "video", {
 		// Common properties
 		{ "pos", NORMALIZED_PAIR },
@@ -1663,7 +1665,8 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 				else
 				{
 					auto storyBoard = new ThemeStoryboard();
-					if (!storyBoard->fromXmlNode(node, typeMap))
+
+					if (!storyBoard->fromXmlNode(node, typeMap, mPaths.size() ? Utils::FileSystem::getParent(mPaths.back()) : ""))
 					{
 						auto sb = element.mStoryBoards.find(storyBoard->eventName);
 						if (sb != element.mStoryBoards.cend())
@@ -1879,16 +1882,18 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	{ 
 		Paths::getUserThemesPath(),
 		Paths::getThemesPath(),
-		Paths::getUserEmulationStationPath() + "/themes",
-#ifdef _ENABLEEMUELEC
-        "/emuelec/themes", // emuelec
+		Paths::getUserEmulationStationPath() + "/themes"
+#if !WIN32
+		,"/etc/emulationstation/themes" // Backward compatibility with Retropie
 #endif
-		"/etc/emulationstation/themes" // Backward compatibility with Retropie
+#ifdef _ENABLEEMUELEC
+        "/emuelec/themes","/storage/roms/themes", // emuelec
+#endif
 	};
 
 	std::map<std::string, ThemeSet> sets;
 
-	for(auto path : paths)
+	for (auto path : VectorHelper::distinct(paths, [](auto x) { return x; }))	
 	{
 		if (!Utils::FileSystem::isDirectory(path))
 			continue;
@@ -1897,6 +1902,9 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 
 		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
+			if (Utils::String::startsWith(Utils::FileSystem::getFileName(*it), "."))
+				continue;
+
 			if(Utils::FileSystem::isDirectory(*it))
 			{
 				ThemeSet set = {*it};

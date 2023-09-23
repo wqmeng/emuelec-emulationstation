@@ -29,6 +29,7 @@
 #include "utils/ThreadPool.h"
 #include <SDL_timer.h>
 #include "TextToSpeech.h"
+#include "VolumeControl.h"
 
 #ifdef _ENABLEEMUELEC
 #include "ApiSystem.h"
@@ -529,13 +530,13 @@ void ViewController::launch(FileData* game, LaunchGameOptions options, Vector3f 
 	{
 		auto ext = Utils::String::toLower(Utils::FileSystem::getExtension(game->getPath()));
 
-		if (ext == ".mp4" || ext == ".avi" || ext == ".mkv" || ext == ".webm")
+		if (Utils::FileSystem::isVideo(game->getPath()))
 			GuiVideoViewer::playVideo(mWindow, game->getPath());
 		else if (ext == ".pdf")
 			GuiImageViewer::showPdf(mWindow, game->getPath());
 		else if (ext == ".cbz")
 			GuiImageViewer::showCbz(mWindow, game->getPath());
-		else
+		else if (!Utils::FileSystem::isAudio(game->getPath()))
 		{
 			auto gameImage = game->getImagePath();
 			if (Utils::FileSystem::exists(gameImage))
@@ -834,6 +835,19 @@ std::shared_ptr<SystemView> ViewController::getSystemListView()
 	return mSystemListView;
 }
 
+void ViewController::changeVolume(int increment)
+{
+	int newVal = VolumeControl::getInstance()->getVolume() + increment;
+	if (newVal > 100)
+		newVal = 100;
+	if (newVal < 0)
+		newVal = 0;
+
+	VolumeControl::getInstance()->setVolume(newVal);
+#if !WIN32
+	SystemConf::getInstance()->set("audio.volume", std::to_string(VolumeControl::getInstance()->getVolume()));
+#endif
+}
 
 bool ViewController::input(InputConfig* config, Input input)
 {
@@ -898,6 +912,18 @@ bool ViewController::input(InputConfig* config, Input input)
 #endif    
 	{		
 		AudioManager::getInstance()->playRandomMusic(false);
+		return true;
+	}
+
+	if (config->isMappedTo("joystick2up", input) && input.value != 0)
+	{
+		changeVolume(5);
+		return true;
+	}
+
+	if (config->isMappedTo("joystick2up", input, true) && input.value != 0)
+	{
+		changeVolume(-5);
 		return true;
 	}
 

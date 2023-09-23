@@ -6,16 +6,16 @@
 
 #include <thread>
 
-class GuiBluetooth : public GuiComponent
+class GuiBluetoothForget : public GuiComponent
 {
 public:
-	GuiBluetooth(Window* window);
+	GuiBluetoothForget(Window* window);
 	bool input(InputConfig* config, Input input) override;
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	bool	load();
-	void	onRemoveDevice(const std::string& value);
+	void	onRemoveDevice(const std::string& id, const std::string& name = "");
 	void	onRemoveAll();
 
 	MenuComponent mMenu;

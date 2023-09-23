@@ -171,6 +171,106 @@ void InputManager::clearJoysticks()
 	mJoysticksLock.unlock();
 }
 
+#if defined(WIN32)
+#include <cfgmgr32.h>
+
+class Win32RawInputApi
+{
+public:
+	Win32RawInputApi()
+	{		
+		m_hSDL2 = ::LoadLibrary("SDL2.dll");
+		if (m_hSDL2 != NULL)
+		{
+			m_JoystickPathForIndex = (SDL_JoystickPathForIndexPtr) ::GetProcAddress(m_hSDL2, "SDL_JoystickPathForIndex");
+		}
+
+		m_hSetupapi = ::LoadLibrary("setupapi.dll");
+		if (m_hSetupapi != NULL)
+		{
+			m_CM_Locate_DevNodeA = (CM_Locate_DevNodeAPtr) ::GetProcAddress(m_hSetupapi, "CM_Locate_DevNodeA");
+			m_CM_Get_Parent = (CM_Get_ParentPtr) ::GetProcAddress(m_hSetupapi, "CM_Get_Parent");
+			m_CM_Get_Device_IDA = (CM_Get_Device_IDAPtr) ::GetProcAddress(m_hSetupapi, "CM_Get_Device_IDA");
+		}
+	}
+
+	~Win32RawInputApi()
+	{
+		if (m_hSDL2 != NULL)
+			::FreeLibrary(m_hSDL2);
+
+		m_hSDL2 = NULL;
+
+		if (m_hSetupapi != NULL)
+			::FreeLibrary(m_hSetupapi);
+
+		m_hSetupapi = NULL;
+	}
+	
+	std::string SDL_JoystickPathForIndex(int device_index)
+	{
+		if (m_JoystickPathForIndex != NULL)
+			return m_JoystickPathForIndex(device_index);
+
+		return "";
+	}
+
+	std::string getInputDeviceParent(const std::string& devicePath)
+	{
+		if (m_CM_Locate_DevNodeA == NULL || m_CM_Get_Parent == NULL || m_CM_Get_Device_IDA == NULL)
+			return devicePath;
+
+		std::string path = devicePath;
+
+		auto vidindex = path.find("VID_");
+		if (vidindex == std::string::npos)
+			vidindex = path.find("vid_");
+
+		if (vidindex != std::string::npos)
+		{
+			auto cut = path.find("#{", vidindex);
+			if (cut != std::string::npos)
+				path = path.substr(0, cut);
+		}
+
+		path = Utils::String::replace(path, "\\\\?\\", "");
+		path = Utils::String::replace(path, "#", "\\");
+
+		DEVINST nDevInst;
+		int apiResult = m_CM_Locate_DevNodeA(&nDevInst, (DEVINSTID_A) path.c_str(), CM_LOCATE_DEVNODE_NORMAL);
+		if (apiResult == CR_SUCCESS)
+		{
+			if (m_CM_Get_Parent(&nDevInst, nDevInst, 0) == CR_SUCCESS)
+			{
+				char buf[255];
+				if (m_CM_Get_Device_IDA(nDevInst, buf, 255, 0) == CR_SUCCESS)
+					return std::string(buf);
+			}
+		}
+
+		return devicePath;
+	}
+
+private:	
+	HMODULE m_hSDL2;
+	HMODULE m_hSetupapi;
+
+	typedef const char *(SDLCALL *SDL_JoystickPathForIndexPtr)(int);
+	SDL_JoystickPathForIndexPtr m_JoystickPathForIndex;
+	
+	typedef CONFIGRET(WINAPI* CM_Locate_DevNodeAPtr)(PDEVINST pdnDevInst, DEVINSTID_A pDeviceID, ULONG ulFlags);
+	CM_Locate_DevNodeAPtr m_CM_Locate_DevNodeA;
+
+	typedef CONFIGRET(WINAPI* CM_Get_ParentPtr)(PDEVINST pdnDevInst, DEVINST dnDevInst, ULONG ulFlags);
+	CM_Get_ParentPtr m_CM_Get_Parent;
+
+	typedef CONFIGRET(WINAPI* CM_Get_Device_IDAPtr)(DEVINST dnDevInst, PSTR Buffer, ULONG BufferLen, ULONG ulFlags);
+	CM_Get_Device_IDAPtr m_CM_Get_Device_IDA;
+};
+
+Win32RawInputApi Win32RawInput;
+#endif
+
 void InputManager::rebuildAllJoysticks(bool deinit)
 {
 	if (deinit)
@@ -181,12 +281,18 @@ void InputManager::rebuildAllJoysticks(bool deinit)
 	if (deinit)
 		SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 
+#if WIN32
+	if (!Settings::getInstance()->getBool("HidJoysticks"))
+		SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "0");
+#endif
+
 	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, Settings::getInstance()->getBool("BackgroundJoystickInput") ? "1" : "0");
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);	
 
 	mJoysticksLock.lock();
 
 	int numJoysticks = SDL_NumJoysticks();
+
 	for (int idx = 0; idx < numJoysticks; idx++)
 	{
 		// open joystick & add to our list
@@ -203,6 +309,11 @@ void InputManager::rebuildAllJoysticks(bool deinit)
 		char guid[40];
 		SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joy), guid, 40);
 
+#if WIN32
+		// SDL 2.26 + -> Remove new CRC-16 name hash encoding
+		for (int i = 4; i < 8; i++) guid[i] = '0';
+#endif
+
 		// create the InputConfig
 		auto cfg = mInputConfigs.find(joyId);
 		if (cfg != mInputConfigs.cend())
@@ -213,12 +324,24 @@ void InputManager::rebuildAllJoysticks(bool deinit)
 			mInputConfigs.erase(joyId);
 		}
 
-		mInputConfigs[joyId] = new InputConfig(joyId, idx, SDL_JoystickName(joy), guid, SDL_JoystickNumButtons(joy), SDL_JoystickNumHats(joy), SDL_JoystickNumAxes(joy)); 
+		// if SDL_JoystickPathForIndex does not exist, store a value containing index + guid
+		std::string devicePath = Utils::String::padLeft(std::to_string(idx), 4, '0') + "@" + std::string(guid);
+
+#if WIN32
+		SDL_version ver;
+		SDL_GetVersion(&ver);
+		if (ver.major >= 2 && ver.minor >= 24)
+			devicePath = Win32RawInput.getInputDeviceParent(Win32RawInput.SDL_JoystickPathForIndex(idx));
+#elif SDL_VERSION_ATLEAST(2, 24, 0)
+		devicePath = SDL_JoystickPathForIndex(idx);
+#endif
+
+		mInputConfigs[joyId] = new InputConfig(joyId, idx, SDL_JoystickName(joy), guid, SDL_JoystickNumButtons(joy), SDL_JoystickNumHats(joy), SDL_JoystickNumAxes(joy), devicePath);
 
 		if (!loadInputConfig(mInputConfigs[joyId]))
-			LOG(LogInfo) << "Added unconfigured joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << idx << ").";
+			LOG(LogInfo) << "Added unconfigured joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << idx << ", device path : " << devicePath << ").";
 		else
-			LOG(LogInfo) << "Added known joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << idx << ")";
+			LOG(LogInfo) << "Added known joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << idx << ", device path : " << devicePath << ").";
 
 		// set up the prevAxisValues
 		int numAxes = SDL_JoystickNumAxes(joy);
@@ -226,7 +349,7 @@ void InputManager::rebuildAllJoysticks(bool deinit)
 		mPrevAxisValues.erase(joyId);
 		mPrevAxisValues[joyId] = new int[numAxes];
 		std::fill(mPrevAxisValues[joyId], mPrevAxisValues[joyId] + numAxes, 0); //initialize array to 0
-	}
+	}	
 
 	mJoysticksLock.unlock();
 
@@ -301,11 +424,6 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 	
 	case SDL_MOUSEBUTTONDOWN:        
 	case SDL_MOUSEBUTTONUP:
-#ifndef WIN32
-		if (mGunManager != nullptr && mGunManager->getGuns().size())
-			window->cancelScreenSaver();
-		else
-#endif
 		if (!window->processMouseButton(ev.button.button, ev.type == SDL_MOUSEBUTTONDOWN, ev.button.x, ev.button.y))
 			window->input(getInputConfigByDevice(DEVICE_MOUSE), Input(DEVICE_MOUSE, TYPE_BUTTON, ev.button.button, ev.type == SDL_MOUSEBUTTONDOWN, false));
 
@@ -319,7 +437,11 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 		return true;
 		*/
 	case SDL_MOUSEMOTION:
+#if !WIN32
+	  if (ev.motion.which == SDL_TOUCH_MOUSEID)
+#endif
 		window->processMouseMove(ev.motion.x, ev.motion.y, ev.motion.which == SDL_TOUCH_MOUSEID);
+
 		return true;
 
 	case SDL_MOUSEWHEEL:
@@ -425,49 +547,66 @@ bool InputManager::tryLoadInputConfig(std::string path, InputConfig* config, boo
 	if (!root)
 		return false;
 	
-	// looking for a device having the same guid and name, or if not, one with the same guid or in last chance, one with the same name
-
-	bool found_guid = false;
-	bool found_exact = false;
-	for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig")) {
-		// check the guid
-		if (strcmp(config->getDeviceGUIDString().c_str(), item.attribute("deviceGUID").value()) == 0) {
-			// found a correct guid
-			found_guid = true; // no more need to check the name only
+	// Search for exact match guid + name
+	for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig"))
+	{
+		if (strcmp(config->getDeviceGUIDString().c_str(), item.attribute("deviceGUID").value()) == 0 && strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0)
+		{
 			configNode = item;
-#if WIN32
-			found_exact = true;
 			break;
-#else
-			if (strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0) {
-				// found the exact device
-				found_exact = true;
+		}
+	}
+
+	// Search for guid + name match but test guid without the new crc16 bytes (SDL2 2.26)
+	// Cf. https://github.com/libsdl-org/SDL/commit/c1e087394020a8cb9d2a04a1eabbcc23a6a5b20d
+	if (!configNode)
+	{
+		for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig"))
+		{
+			// Remove CRC-16 encoding from SDL2 2.26+ guids
+			std::string guid = config->getDeviceGUIDString();
+			for (int i = 4; i < 8 && i < guid.length(); i++)
+				guid[i] = '0';
+
+			if (guid != config->getDeviceGUIDString())
+			if (strcmp(guid.c_str(), item.attribute("deviceGUID").value()) == 0 && strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0)
+			{
 				configNode = item;
 				break;
 			}
-#endif
 		}
+	}
 
-#if !WIN32
-		// check for a name if no guid is found
-		if (found_guid == false) {
-			if (strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0) {
+	// Search for exact match guid
+	if (!configNode && allowApproximate)
+	{
+		for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig"))
+		{
+			if (strcmp(config->getDeviceGUIDString().c_str(), item.attribute("deviceGUID").value()) == 0)
+			{
+				LOG(LogInfo) << "Approximative device found using guid=" << configNode.attribute("deviceGUID").value() << " name=" << configNode.attribute("deviceName").value() << ")";
 				configNode = item;
+				break;
 			}
 		}
-#endif
+	}
+
+	// Search for name match
+	if (!configNode && allowApproximate)
+	{
+		for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig"))
+		{
+			if (strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0)
+			{
+				LOG(LogInfo) << "Approximative device found using guid=" << configNode.attribute("deviceGUID").value() << " name=" << configNode.attribute("deviceName").value() << ")";
+				configNode = item;
+				break;
+			}
+		}
 	}
 
 	if (!configNode)
 		return false;
-	
-	if (found_exact == false)
-	{
-		LOG(LogInfo) << "Approximative device found using guid=" << configNode.attribute("deviceGUID").value() << " name=" << configNode.attribute("deviceName").value() << ")";
-
-		if (!allowApproximate)
-			return false;
-	}
 
 	config->loadFromXML(configNode);
 	return true;
@@ -703,12 +842,35 @@ std::map<int, InputConfig*> InputManager::computePlayersConfigs()
 			availableConfigured.push_back(conf.second);
 
 	// sort available configs
+#if WIN32
+	std::sort(availableConfigured.begin(), availableConfigured.end(), [](InputConfig * a, InputConfig * b) -> bool { return a->getSortDevicePath() < b->getSortDevicePath(); });
+#else
 	std::sort(availableConfigured.begin(), availableConfigured.end(), [](InputConfig * a, InputConfig * b) -> bool { return a->getDeviceIndex() < b->getDeviceIndex(); });
+#endif
 
 	// 2. Pour chaque joueur verifier si il y a un configurated
 	// associer le input au joueur
 	// enlever des disponibles
 	std::map<int, InputConfig*> playerJoysticks;
+
+	// First loop, search for PATH. Ultra High Priority
+	for (int player = 0; player < MAX_PLAYERS; player++)
+	{
+		std::string playerConfigPath = Settings::getInstance()->getString(Utils::String::format("INPUT P%iPATH", player + 1));
+		if (!playerConfigPath.empty())
+		{
+			for (auto it1 = availableConfigured.begin(); it1 != availableConfigured.end(); ++it1)
+			{
+				InputConfig* config = *it1;
+				if (playerConfigPath == config->getSortDevicePath())
+				{
+					availableConfigured.erase(it1);
+					playerJoysticks[player] = config;
+					break;
+				}
+			}
+		}
+	}
 
 	// First loop, search for GUID + NAME. High Priority
 	for (int player = 0; player < MAX_PLAYERS; player++) 
@@ -779,6 +941,14 @@ std::map<int, InputConfig*> InputManager::computePlayersConfigs()
 		}		
 	}
 
+	for (int player = 0; player < MAX_PLAYERS; player++)
+	{
+		if (playerJoysticks[player] == nullptr)
+			continue;
+
+		LOG(LogInfo) << "computePlayersConfigs : Player " << player << " => " << playerJoysticks[player]->getDevicePath();
+	}
+
 	return playerJoysticks;
 }
 
@@ -790,13 +960,16 @@ std::string InputManager::configureEmulators() {
     InputConfig * playerInputConfig = playerJoysticks[player];
     if(playerInputConfig != NULL){
 #ifdef _ENABLEEMUELEC
-      command << "-p" << player+1 << "index "      <<  playerInputConfig->getDeviceIndex();
+      command << "-p" << player+1 << "index "      << playerInputConfig->getDeviceIndex();
       command << " -p" << player+1 << "guid "       << playerInputConfig->getDeviceGUIDString();
       command << " ";
 #else
-      command <<  "-p" << player+1 << "index "      <<  playerInputConfig->getDeviceIndex();
+      command <<  "-p" << player+1 << "index "      << playerInputConfig->getDeviceIndex();
       command << " -p" << player+1 << "guid "       << playerInputConfig->getDeviceGUIDString();
-      command << " -p" << player+1 << "name \""     <<  playerInputConfig->getDeviceName() << "\"";
+#if WIN32
+	  command << " -p" << player+1 << "path \""     << playerInputConfig->getDevicePath() << "\"";
+#endif
+      command << " -p" << player+1 << "name \""     << playerInputConfig->getDeviceName() << "\"";
       command << " -p" << player+1 << "nbbuttons "  << playerInputConfig->getDeviceNbButtons();
       command << " -p" << player+1 << "nbhats "     << playerInputConfig->getDeviceNbHats();
       command << " -p" << player+1 << "nbaxes "     << playerInputConfig->getDeviceNbAxes();
@@ -808,7 +981,7 @@ std::string InputManager::configureEmulators() {
   return command.str();
 }
 
-void InputManager::updateBatteryLevel(int id, std::string device, int level)
+void InputManager::updateBatteryLevel(int id, const std::string& device, const std::string& devicePath, int level)
 {
 	bool changed = false;
 
@@ -819,10 +992,21 @@ void InputManager::updateBatteryLevel(int id, std::string device, int level)
 		InputConfig* config = getInputConfigByDevice(joy.first);
 		if (config != NULL && config->isConfigured())
 		{
-			if (Utils::String::compareIgnoreCase(config->getDeviceGUIDString(), device) == 0)
+			if (!devicePath.empty())
 			{
-				config->updateBatteryLevel(level);
-				changed = true;
+				if (Utils::String::compareIgnoreCase(config->getDevicePath(), devicePath) == 0)
+				{
+					config->updateBatteryLevel(level);
+					changed = true;
+				}
+			}
+			else
+			{
+				if (Utils::String::compareIgnoreCase(config->getDeviceGUIDString(), device) == 0)
+				{
+					config->updateBatteryLevel(level);
+					changed = true;
+				}
 			}
 		}
 	}
