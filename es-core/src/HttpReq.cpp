@@ -7,6 +7,7 @@
 #include <thread>
 
 #include <SDL.h>
+#include "Paths.h"
 
 #ifdef WIN32
 #include <time.h>
@@ -51,7 +52,7 @@ bool HttpReq::isUrl(const std::string& str)
 }
 
 #ifdef WIN32
-LONG _regGetDWORD(HKEY hKey, const std::string &strPath, const std::string &strValueName)
+static LONG _regGetDWORD(HKEY hKey, const std::string &strPath, const std::string &strValueName)
 {
 	HKEY hSubKey;
 	LONG nRet = ::RegOpenKeyEx(hKey, strPath.c_str(), 0L, KEY_QUERY_VALUE, &hSubKey);
@@ -70,7 +71,7 @@ LONG _regGetDWORD(HKEY hKey, const std::string &strPath, const std::string &strV
 	return 0;
 }
 
-std::string _regGetString(HKEY hKey, const std::string &strPath, const std::string &strValueName)
+static std::string _regGetString(HKEY hKey, const std::string &strPath, const std::string &strValueName)
 {
 	std::string ret;
 
@@ -91,6 +92,21 @@ std::string _regGetString(HKEY hKey, const std::string &strPath, const std::stri
 	return ret;
 }
 #endif
+
+static std::string getCookiesContainerPath(bool createDirectory = true)
+{	
+	std::string cookiesPath = Utils::FileSystem::getGenericPath(Paths::getUserEmulationStationPath() + std::string("/tmp"));
+	if (createDirectory)
+		Utils::FileSystem::createDirectory(cookiesPath);
+
+	return Utils::FileSystem::getGenericPath(Utils::FileSystem::combine(cookiesPath, "cookies.txt"));
+}
+
+void HttpReq::resetCookies()
+{
+	auto path = getCookiesContainerPath(false);
+	Utils::FileSystem::removeFile(path);
+}
 
 HttpReq::HttpReq(const std::string& url, const std::string& outputFilename) 
 	: mStatus(REQ_IN_PROGRESS), mHandle(NULL), mFile(NULL)
@@ -152,15 +168,6 @@ void HttpReq::performRequest(const std::string& url, HttpReqOptions* options)
 
 		curl_easy_setopt(mHandle, CURLOPT_HTTPHEADER, hs);
 	}
-	/*
-	struct curl_slist *hs = NULL;
-	hs = curl_slist_append(hs, "Content-Type: application/json");
-	curl_easy_setopt(mHandle, CURLOPT_HTTPHEADER, hs);
-
-	curl_easy_setopt(mHandle, CURLOPT_POST, 1L);
-	curl_easy_setopt(mHandle, CURLOPT_POSTFIELDS, "postvar1=value1&postvar2=value2&postvar3=value3");
-	curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-	*/
 
 	//set curl to handle redirects
 	err = curl_easy_setopt(mHandle, CURLOPT_FOLLOWLOCATION, 1L);
@@ -219,13 +226,25 @@ void HttpReq::performRequest(const std::string& url, HttpReqOptions* options)
 		return;
 	}
 
-	// Set fake user agent
-	err = curl_easy_setopt(mHandle, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0");
-	if (err != CURLE_OK)
+	// Set user agent
+	std::string userAgent = options ? options->userAgent : HTTP_REQ_USERAGENT;
+	if (!userAgent.empty())
 	{
-		mStatus = REQ_IO_ERROR;
-		onError(curl_easy_strerror(err));
-		return;
+		err = curl_easy_setopt(mHandle, CURLOPT_USERAGENT, userAgent.c_str());
+		if (err != CURLE_OK)
+		{
+			mStatus = REQ_IO_ERROR;
+			onError(curl_easy_strerror(err));
+			return;
+		}
+	}
+
+	if (options == nullptr || options->useCookieManager)
+	{
+		std::string cookiesFile = getCookiesContainerPath(); 
+
+		curl_easy_setopt(mHandle, CURLOPT_COOKIEFILE, cookiesFile.c_str());
+		curl_easy_setopt(mHandle, CURLOPT_COOKIEJAR, cookiesFile.c_str());
 	}
 
 	curl_easy_setopt(mHandle, CURLOPT_HEADERFUNCTION, &HttpReq::header_callback);
@@ -252,7 +271,6 @@ void HttpReq::performRequest(const std::string& url, HttpReqOptions* options)
 
 			if (!proxyServer.empty())
 			{
-				CURLcode ret;
 				curl_easy_setopt(mHandle, CURLOPT_PROXY, proxyServer.c_str());
 				curl_easy_setopt(mHandle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 			}
@@ -377,13 +395,34 @@ HttpReq::Status HttpReq::status()
 					{
 						std::string err;
 
-						if (http_status_code >= 400 && http_status_code <= 500)
+						if (http_status_code >= 400 && http_status_code <= 503)
 						{
 							if (req->mFilePath.empty())
-								err = req->getContent();
+							{
+								auto content = req->getContent();
+								if (!content.empty() && content.find("<body") != std::string::npos)
+								{
+									// Parse response HTML & extract body
+									auto body = Utils::String::extractString(content, "<body", "</body>", true);
+									body = Utils::String::replace(body, "\r", "");
+									body = Utils::String::replace(body, "\n", "");
+									body = Utils::String::replace(body, "</p>", "\r\n");
+									body = Utils::String::replace(body, "<br>", "\r\n");
+									body = Utils::String::replace(body, "<hr>", "\r\n");
+									body = Utils::String::removeHtmlTags(body);
 
-							req->mStatus = (Status)http_status_code;
-						}
+									if (!body.empty())
+										err = "HTTP status " + std::to_string(http_status_code) + "\r\n" + body;
+								}
+								else
+									err = content;
+							}
+
+							if (http_status_code > 500)
+								req->mStatus = REQ_IO_ERROR;
+							else
+								req->mStatus = (Status)http_status_code;
+						}						
 						else
 							req->mStatus = REQ_IO_ERROR;
 
@@ -531,7 +570,7 @@ size_t HttpReq::write_content(void* buff, size_t size, size_t nmemb, void* req_p
 		return 0;
 
 	size_t rs = size * nmemb;
-	fwrite(buff, 1, rs, file) != rs;	
+	fwrite(buff, 1, rs, file);
 	if (ferror(file))
 	{
 		request->closeStream();			
@@ -541,15 +580,15 @@ size_t HttpReq::write_content(void* buff, size_t size, size_t nmemb, void* req_p
 		return 0;
 	}
 
-	double cl;
-	if (!curl_easy_getinfo(request->mHandle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &cl))
-	{		
+	curl_off_t cl = 0;
+	if (!curl_easy_getinfo(request->mHandle, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &cl))
+	{
 		request->mPosition += rs;
 
 		if (cl <= 0)
 			request->mPercent = -1;
 		else
-			request->mPercent = (int) (request->mPosition * 100.0 / cl);
+			request->mPercent = (int)(request->mPosition * 100LL / cl);
 	}
 
 	return nmemb;

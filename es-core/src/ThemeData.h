@@ -7,12 +7,15 @@
 #include "utils/FileSystemUtil.h"
 #include <deque>
 #include <map>
+#include <set>
 #include <unordered_map>
 #include <memory>
 #include <sstream>
 #include <vector>
 #include <pugixml/src/pugixml.hpp>
 #include "utils/MathExpr.h"
+#include "renderers/Renderer.h"
+#include "ThemeVariables.h"
 
 namespace pugi { class xml_node; }
 
@@ -133,6 +136,9 @@ struct MenuBackground
 	float			scrollbarSize;
 	float			scrollbarCorner;
 	std::string		scrollbarAlignment;
+
+	Renderer::ShaderInfo shader;
+	Renderer::ShaderInfo menuShader;
 };
 
 struct MenuGroupElement
@@ -167,6 +173,8 @@ struct ButtonElement
 
 class ThemeData
 {
+	friend class GuiComponent;
+
 public:
 	class ThemeMenu
 	{
@@ -205,6 +213,8 @@ public:
 		int extra;
 		std::string type;
 		std::map<std::string, ThemeStoryboard*> mStoryBoards;
+
+		std::vector<std::pair<std::string, ThemeElement>> children;
 
 		struct Property
 		{
@@ -271,11 +281,15 @@ private:
 	class ThemeView
 	{
 	public:
-		ThemeView() { isCustomView = false; }
+		ThemeView() { isCustomView = false; extraTransitionSpeed = -1.0f; }
 
 		std::map<std::string, ThemeElement> elements;
 		std::vector<std::string> orderedKeys;
 		std::string baseType;
+
+		std::string extraTransition;
+		std::string extraTransitionDirection;
+		float       extraTransitionSpeed;
 
 		std::vector<std::string> baseTypes;
 
@@ -288,10 +302,10 @@ private:
 
 public:
 
-	ThemeData();
+	ThemeData(bool temporary = false);
 
 	// throws ThemeException
-	void loadFile(const std::string system, std::map<std::string, std::string> sysDataMap, const std::string& path, bool fromFile = true);
+	void loadFile(const std::string& system, const std::map<std::string, std::string>& sysDataMap, const std::string& path, bool fromFile = true);
 
 	enum ElementPropertyType
 	{
@@ -305,6 +319,7 @@ public:
 	};
 
 	bool hasView(const std::string& view);
+	ThemeView* getView(const std::string& view);
 
 	bool isCustomView(const std::string& view);
 	std::string getCustomViewBaseType(const std::string& view);
@@ -361,10 +376,14 @@ public:
 	std::shared_ptr<ThemeData> clone(const std::string& viewName);
 	bool appendFile(const std::string& path, bool perGameOverride = false);
 
+	static bool parseCustomShader(const ThemeData::ThemeElement* elem, Renderer::ShaderInfo* pShader, const std::string& type = "shader");
+
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
-	static std::vector<std::string> sSupportedFeatures;
-	static std::vector<std::string> sSupportedViews;
+	static std::set<std::string> sSupportedItemTemplate;
+	static std::set<std::string> sSupportedFeatures;
+	static std::set<std::string> sSupportedViews;
+	static std::map<std::string, std::string> sBaseClasses;
 
 	std::deque<std::string> mPaths;
 	float mVersion;
@@ -393,8 +412,10 @@ private:
 	void processElement(const pugi::xml_node& root, ThemeElement& element, const std::string& name, const std::string& value, ElementPropertyType type);
 
 	void parseCustomViewBaseClass(const pugi::xml_node& root, ThemeView& view, std::string baseClass);
+	bool findPropertyFromBaseClass(const std::string& typeName, const std::string& propertyName, ElementPropertyType& type);
 
 	static GuiComponent* createExtraComponent(Window* window, const ThemeElement& elem, bool forceLoad = false);
+	static void applySelfTheme(GuiComponent* comp, const ThemeElement& elem);
 
 	std::string resolveSystemVariable(const std::string& systemThemeFolder, const std::string& path);
 	std::string resolvePlaceholders(const char* in);
@@ -406,13 +427,17 @@ private:
 	std::string mGamelistview;
 	std::string mSystemThemeFolder;	
 	std::string mLanguage;
+	std::string mLangAndRegion;
 	std::string mRegion;
 
-	std::map<std::string, std::string> mVariables;
+	ThemeVariables mVariables;
 	
 	class UnsortedViewMap : public std::vector<std::pair<std::string, ThemeView>>
 	{
 	public:		
+		UnsortedViewMap() : std::vector<std::pair<std::string, ThemeView>>() {}
+		UnsortedViewMap(std::initializer_list<std::pair<std::string, ThemeView>> initList) : std::vector<std::pair<std::string, ThemeView>>(initList) { }
+
 		std::vector<std::pair<std::string, ThemeView>>::const_iterator find(std::string view) const
 		{
 			for (std::vector<std::pair<std::string, ThemeView>>::const_iterator it = cbegin(); it != cend(); it++)
@@ -457,8 +482,7 @@ private:
 	static ThemeData* mDefaultTheme;	
 
 	bool mPerGameOverrideTmp;
-	
-	Utils::MathExpr mEvaluator;
+
 	Utils::MathExpr::ValueMap mEvaluatorVariables;
 };
 

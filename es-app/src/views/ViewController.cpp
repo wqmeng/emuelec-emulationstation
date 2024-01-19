@@ -908,7 +908,7 @@ bool ViewController::input(InputConfig* config, Input input)
 	if (((mState.viewing != GAME_LIST && config->isMappedTo("leftthumb", input)) || config->isMappedTo("rightthumb", input)) && input.value != 0)
 #else
 	// Next song
-    if (((mState.viewing != GAME_LIST && config->isMappedTo("l3", input)) || config->isMappedTo("r3", input)) && input.value != 0)
+	if (((mState.viewing != GAME_LIST && config->isMappedTo("l3", input)) || config->isMappedTo("r3", input)) && input.value != 0)
 #endif    
 	{		
 		AudioManager::getInstance()->playRandomMusic(false);
@@ -947,17 +947,13 @@ void ViewController::update(int deltaTime)
 
 	if (mDeferPlayViewTransitionTo != nullptr)
 	{
-		auto destView = mDeferPlayViewTransitionTo;
-		mDeferPlayViewTransitionTo.reset();
-		
-		mWindow->postToUiThread([this, destView]() 
-		{ 
-			if (mCurrentView)
-				mCurrentView->onHide();
+		if (mCurrentView)
+			mCurrentView->onHide();
 
-			mCurrentView = destView;
-			playViewTransition(false); 
-		});
+		mCurrentView = mDeferPlayViewTransitionTo;
+		mDeferPlayViewTransitionTo = nullptr;
+
+		playViewTransition(false); 
 	}
 }
 
@@ -1112,7 +1108,9 @@ void ViewController::reloadGameListView(IGameListView* view)
 	// Redisplay the current view
 	if (mCurrentView)
 	{
-		mCurrentView->onShow();
+		if (isCurrent)
+			mCurrentView->onShow();
+
 		updateHelpPrompts();
 	}
 }
@@ -1402,7 +1400,14 @@ bool ViewController::hitTest(int x, int y, Transform4x4f& parentTransform, std::
 //  Skip ViewController rect
 
 	for (int i = 0; i < getChildCount(); i++)
-		ret |= getChild(i)->hitTest(x, y, trans, pResult);
+	{
+		auto child = getChild(i);
+		if (mCurrentView == nullptr || child != mCurrentView.get())
+			ret |= getChild(i)->hitTest(x, y, trans, pResult);
+	}
+
+	if (mCurrentView != nullptr)
+		mCurrentView->hitTest(x, y, trans, pResult);
 
 	return ret;
 }
