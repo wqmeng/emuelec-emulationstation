@@ -304,14 +304,14 @@ if (!isKidUI)
 
 	if (animate)
 	{
-		if (Renderer::isSmallScreen())
+		if (Renderer::ScreenSettings::fullScreenMenus())
 			animateTo(Vector2f((Renderer::getScreenWidth() - getSize().x()) / 2, (Renderer::getScreenHeight() - getSize().y()) / 2));
 		else
 			animateTo(Vector2f((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f));
 	}
 	else
 	{
-		if (Renderer::isSmallScreen())
+		if (Renderer::ScreenSettings::fullScreenMenus())
 			setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 		else
 			setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
@@ -1137,7 +1137,7 @@ void GuiMenu::addVersionInfo()
 		
 	if (!label.empty())
 	{
-		if (Renderer::isSmallScreen())
+		if (Renderer::ScreenSettings::fullScreenMenus())
 		{
 			mMenu.setSubTitle(label);
 			mMenu.addButton(_("BACK"), _("go back"), [&] { delete this; });
@@ -1558,6 +1558,32 @@ void GuiMenu::openDeveloperSettings()
 			mWindow->closeSplashScreen();
 		});
 
+	s->addGroup(_("DISPLAY SETTINGS"));
+
+	auto menuFontScale = std::make_shared< OptionListComponent<std::string> >(mWindow, _("MENU FONT SCALE"), false);
+	menuFontScale->addRange({ { _("AUTO"), "" },{ "100%", "1.0" },{ "110%", "1.1" },{ "125%", "1.25" },{ "133%", "1.31" },{ "150%", "1.5" },{ "175%", "1.75" },{ "200%", "2" },{ "75%", "0.75" } ,{ "50%", "0.5" } },
+		Settings::getInstance()->getString("MenuFontScale"));
+	s->addWithLabel(_("MENU FONT SCALE"), menuFontScale);
+	s->addSaveFunc([s, menuFontScale] { if (Settings::getInstance()->setString("MenuFontScale", menuFontScale->getSelected())) s->setVariable("reboot", true); });
+
+	auto fontScale = std::make_shared< OptionListComponent<std::string> >(mWindow, _("FONT SCALE"), false);
+	fontScale->addRange({ { _("AUTO"), "" },{ "100%", "1.0" },{ "110%", "1.1" },{ "125%", "1.25" },{ "133%", "1.31" },{ "150%", "1.5" },{ "175%", "1.75" },{ "200%", "2" },{ "75%", "0.75" } ,{ "50%", "0.5" } },
+		Settings::getInstance()->getString("FontScale"));
+	s->addWithLabel(_("THEME FONT SCALE"), fontScale);
+	s->addSaveFunc([s, fontScale] { if (Settings::getInstance()->setString("FontScale", fontScale->getSelected())) s->setVariable("reboot", true); });
+
+	auto fullScreenMenus = std::make_shared< OptionListComponent<std::string> >(mWindow, _("FULL SCREEN MENUS"), false);
+	fullScreenMenus->addRange({ { _("AUTO"), "" },{ "YES", "true" },{ "NO", "false" } }, Settings::getInstance()->getString("FullScreenMenu"));
+	s->addWithLabel(_("FULL SCREEN MENUS"), fullScreenMenus);
+	s->addSaveFunc([s, fullScreenMenus] { if (Settings::getInstance()->setString("FullScreenMenu", fullScreenMenus->getSelected())) s->setVariable("reboot", true); });
+
+	auto isSmallScreen = std::make_shared< OptionListComponent<std::string> >(mWindow, _("FORCE SMALL SCREEN THEMING"), false);
+	isSmallScreen->addRange({ { _("AUTO"), "" },{ "YES", "true" },{ "NO", "false" } }, Settings::getInstance()->getString("ForceSmallScreen"));
+	s->addWithLabel(_("FORCE SMALL SCREEN THEMING"), isSmallScreen);
+	s->addSaveFunc([s, isSmallScreen] { if (Settings::getInstance()->setString("ForceSmallScreen", isSmallScreen->getSelected())) s->setVariable("reboot", true); });
+
+
+
 	s->addGroup(_("DATA MANAGEMENT"));
 
 	// ExcludeMultiDiskContent
@@ -1727,7 +1753,10 @@ void GuiMenu::openDeveloperSettings()
 	s->addSaveFunc([optimizeVideo] { Settings::getInstance()->setBool("OptimizeVideo", optimizeVideo->getState()); });
 	
 	s->onFinalize([s, window]
-	{
+	{					
+		if (s->getVariable("reboot"))
+			window->displayNotificationMessage(_U("\uF011  ") + _("REBOOT REQUIRED TO APPLY THE NEW CONFIGURATION"));
+
 		if (s->getVariable("reloadAll"))
 		{
 			ViewController::get()->reloadAll(window);
@@ -1918,6 +1947,7 @@ void GuiMenu::openSystemSettings()
 	language_choice->add("SVENSKA", 	     "sv_SE", language == "sv_SE");
 	language_choice->add("TÜRKÇE",  	     "tr_TR", language == "tr_TR");
 	language_choice->add("Українська",           "uk_UA", language == "uk_UA");
+	language_choice->add("TIẾNG VIỆT",           "vi_VN", language == "vi_VN");
 	language_choice->add("简体中文", 	     "zh_CN", language == "zh_CN");
 	language_choice->add("正體中文", 	     "zh_TW", language == "zh_TW");
 
@@ -5127,6 +5157,42 @@ void GuiMenu::popSpecificConfigurationGui(Window* mWindow, std::string title, st
 	}
 
 	auto customFeatures = systemData->getCustomFeatures(currentEmulator, currentCore);
+
+#ifdef _ENABLEEMUELEC
+		// Conf gptokeyb.
+		if (systemData->isFeatureSupported(currentEmulator, currentCore, EmulatorFeatures::gptokeyb) || currentEmulator == "ports")
+		{
+			auto emuelec_virtual_kb = std::make_shared< OptionListComponent<std::string> >(mWindow, "Virtual Keyboard", false);
+			std::vector<std::string> virtual_kb;
+
+			std::string def_vkb;
+			for(std::stringstream ss(Utils::Platform::getShOutput(R"(/usr/bin/emuelec-utils get_filenames_no_ext /emuelec/configs/gptokeyb)")); getline(ss, def_vkb, ','); ) {
+				if (!std::count(virtual_kb.begin(), virtual_kb.end(), def_vkb)) {
+					 virtual_kb.push_back(def_vkb);
+				}
+			}
+
+			std::string index = SystemConf::getInstance()->get(configName + ".gptokeyb");
+			if (index.empty())
+				index = "auto";
+
+			emuelec_virtual_kb->add(_("AUTO"), "auto", index == "auto");
+			for (auto it = virtual_kb.cbegin(); it != virtual_kb.cend(); it++) {
+				emuelec_virtual_kb->add(*it, *it, index == *it);
+			}
+		
+			systemConfiguration->addWithLabel(_("VIRTUAL KEYBOARD"), emuelec_virtual_kb);
+
+			systemConfiguration->addSaveFunc([mWindow, configName, emuelec_virtual_kb] {
+				std::string vkb_choice = emuelec_virtual_kb->getSelected();
+
+				if (vkb_choice == "auto")
+					vkb_choice = "";
+
+				SystemConf::getInstance()->set(configName + ".gptokeyb", vkb_choice);
+			});
+		}
+#endif
 
 #ifdef _ENABLEEMUELEC
 	// NATIVE VIDEO.

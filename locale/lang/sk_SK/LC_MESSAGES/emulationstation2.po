@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Batocera\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-05 13:13+0100\n"
-"PO-Revision-Date: 2023-12-20 13:12+0100\n"
+"PO-Revision-Date: 2024-02-08 18:37+0100\n"
 "Last-Translator: Roman Paholík\n"
 "Language-Team: Slovak (Slovakia)\n"
 "Language: sk_SK\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=( n == 1 ) ? 0 : ( n >= 2 && n <= 4 ) ? 1 : "
 "2;\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 136009\n"
 "X-Loco-Api-Version: 1.0.27 20230201-1\n"
@@ -1047,6 +1047,15 @@ msgstr "Žiadne chýbajúce BIOS súbory"
 msgid "MISSING BIOS CHECK"
 msgstr "Kontrola chýbajúceho BIOSu"
 
+msgid "Installed systems"
+msgstr "Nainštalované systémy"
+
+msgid "All"
+msgstr "Všetko"
+
+msgid "refresh"
+msgstr "obnoviť"
+
 msgid "NO MISSING BIOS"
 msgstr "Žiadny chýbajúci BIOS"
 
@@ -1368,9 +1377,6 @@ msgstr "Sťahovač tém"
 
 msgid "SELECT THEMES TO INSTALL/REMOVE"
 msgstr "Vyberte témy na inštaláciu/odstránenie"
-
-msgid "All"
-msgstr "Všetko"
 
 msgid "Installed"
 msgstr "Nainštalované"
@@ -1843,6 +1849,24 @@ msgstr "Vytvoriť pamäť obrázkov"
 msgid "Building image cache"
 msgstr "Vytváram pamäť obrázkov"
 
+msgid "DISPLAY SETTINGS"
+msgstr "Nastavenie zobrazenia"
+
+msgid "MENU FONT SCALE"
+msgstr "Mierka písma ponuky"
+
+msgid "FONT SCALE"
+msgstr "Mierka písma"
+
+msgid "THEME FONT SCALE"
+msgstr "Mierka písma témy"
+
+msgid "FULL SCREEN MENUS"
+msgstr "Celoobrazovkové ponuky"
+
+msgid "FORCE SMALL SCREEN THEMING"
+msgstr "Vynútiť tému pre malé obrazovky"
+
 msgid "DATA MANAGEMENT"
 msgstr "Správa údajov"
 
@@ -1959,6 +1983,9 @@ msgstr "Optimalizovať využitie obrazovej VRAM"
 
 msgid "OPTIMIZE VIDEO VRAM USAGE"
 msgstr "Optimalizovať využitie video VRAM"
+
+msgid "REBOOT REQUIRED TO APPLY THE NEW CONFIGURATION"
+msgstr "Na použitie zmien je potrebný reštart"
 
 msgid "DOWNLOADS"
 msgstr "Preberania"
@@ -2166,9 +2193,6 @@ msgstr "Vyžadovať heslo na prístup k sieťovému zdieľaniu."
 
 msgid "ROOT PASSWORD"
 msgstr "Heslo roota"
-
-msgid "REBOOT REQUIRED TO APPLY THE NEW CONFIGURATION"
-msgstr "Na použitie zmien je potrebný reštart"
 
 msgid "LATENCY REDUCTION"
 msgstr "Redukcia latencie"
@@ -2434,10 +2458,10 @@ msgid "SHOW RETROACHIEVEMENTS ICON"
 msgstr "Zobraziť ikonu retroachievements"
 
 msgid "SHOW GUN ICON"
-msgstr ""
+msgstr "Zobraziť ikonu zbrane"
 
 msgid "SHOW WHEEL ICON"
-msgstr ""
+msgstr "Zobraziť ikonu volantu"
 
 msgid "SHOW FILENAMES INSTEAD"
 msgstr "Zobraziť názvy súborov"

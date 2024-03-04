@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 23:48+0100\n"
-"PO-Revision-Date: 2023-10-04 11:17+0000\n"
+"PO-Revision-Date: 2024-01-29 23:27+0100\n"
 "Last-Translator: \n"
 "Language-Team: Catalan; Valencian\n"
 "Language: ca\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Loco-Source-Locale: es_ES\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Loco-Parser: loco_parse_po\n"
 
 msgid "UPDATE AVAILABLE"
@@ -1088,6 +1088,15 @@ msgstr "NO FALTEN ARXIUS DE BIOS"
 msgid "MISSING BIOS CHECK"
 msgstr "BIOS QUE FALTEN"
 
+msgid "Installed systems"
+msgstr ""
+
+msgid "All"
+msgstr "Tots"
+
+msgid "refresh"
+msgstr ""
+
 msgid "NO MISSING BIOS"
 msgstr "NO FALTEN BIOS"
 
@@ -1381,9 +1390,6 @@ msgstr "GESTOR DE TEMES"
 msgid "SELECT THEMES TO INSTALL/REMOVE"
 msgstr "SELECCIONAR TEMES A INSTAL·LAR/ELIMINAR"
 
-msgid "All"
-msgstr "Tots"
-
 msgid "Installed"
 msgstr "Instal·lat"
 
@@ -1431,7 +1437,7 @@ msgid "COPY TO FREE SLOT"
 msgstr "COPIAR A UNA RANURA LLIURE"
 
 msgid "SCRAPER SETTINGS"
-msgstr "CONFIGURACIONS D'SCRAPER"
+msgstr "CONFIGURACIONS DEL RASPADOR"
 
 msgid "IMAGE SOURCE"
 msgstr "ORIGEN DE LA IMATGE"
@@ -1512,7 +1518,7 @@ msgid "ACCOUNT"
 msgstr ""
 
 msgid "SCRAPER"
-msgstr "SCRAPER"
+msgstr "RASPADOR"
 
 msgid "SCRAPING DATABASE"
 msgstr "BASE DE DADES DE CONTINGUTS DE JOC"
@@ -1855,6 +1861,24 @@ msgstr "CONSTRUIR MEMÒRIA CAU D'IMATGES"
 msgid "Building image cache"
 msgstr "Construïnt memòria cau d'imatges"
 
+msgid "DISPLAY SETTINGS"
+msgstr ""
+
+msgid "MENU FONT SCALE"
+msgstr ""
+
+msgid "FONT SCALE"
+msgstr ""
+
+msgid "THEME FONT SCALE"
+msgstr ""
+
+msgid "FULL SCREEN MENUS"
+msgstr ""
+
+msgid "FORCE SMALL SCREEN THEMING"
+msgstr ""
+
 msgid "DATA MANAGEMENT"
 msgstr "ADMINISTRADOR DE DADES"
 
@@ -1976,6 +2000,9 @@ msgstr "OPTIMITZAR L'ÚS DE LA VRAM PER IMATGES"
 
 msgid "OPTIMIZE VIDEO VRAM USAGE"
 msgstr "OPTIMIZAR L'ÚS DE LA VRAM PER A VIDEO"
+
+msgid "REBOOT REQUIRED TO APPLY THE NEW CONFIGURATION"
+msgstr "PER A APLICAR LA NOVA CONFIGURACIÓ ES REQUEREIX REINICIAR"
 
 msgid "DOWNLOADS"
 msgstr "DESCÀRREGUES"
@@ -2196,9 +2223,6 @@ msgstr ""
 msgid "ROOT PASSWORD"
 msgstr "CONTRASENYA DE ROOT"
 
-msgid "REBOOT REQUIRED TO APPLY THE NEW CONFIGURATION"
-msgstr "PER A APLICAR LA NOVA CONFIGURACIÓ ES REQUEREIX REINICIAR"
-
 msgid "LATENCY REDUCTION"
 msgstr "REDUCCIÓ DE LATÈNCIA"
 
@@ -2394,7 +2418,7 @@ msgid "PER SYSTEM ADVANCED CONFIGURATION"
 msgstr "ADMINISTRACIÓ AVANÇADA PER SISTEMA"
 
 msgid "SCRAPER IS RUNNING. DO YOU WANT TO STOP IT?"
-msgstr "L'SCRAPER S'ESTÀ EXECUTANT. VOL PARAR-LO?"
+msgstr "El RASPADOR S'ESTÀ EXECUTANT. VOLS PARAR-LO?"
 
 msgid "GAME HASHING IS RUNNING. DO YOU WANT TO STOP IT?"
 msgstr "LA VALIDACIÓ DE JOCS S'ESTÀ REALITZANT. VOL ATURAR-LA?"
